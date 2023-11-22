@@ -1,56 +1,30 @@
-// ----------------------------------------------
-// TCSS 460: Autumn 2023
-// MySQL Coonfiguration: Backend
-// ----------------------------------------------
-// Code is based on the 
-// Node.js for MySQL Library:
-// https://github.com/mysqljs/mysql
-// ----------------------------------------------
+const sql = require('mssql');
 
-// ----------------------------------------------
-// (A) Import the MySQL module or library
-// ----------------------------------------------
-const mysql = require("mysql");
-
-// ----------------------------------------------
-// (B) Configure the connection options for MySQL
-//     The database name is: 'washingtondb'
-//     This is the database that we have created 
-//     in Part I.B using phpMyAdmin via XAMPP. 
-// ----------------------------------------------
-// ###### username and password must match ######
-// ----------------------------------------------
-// Ensure username and password match the ones
-// identified using phpMyAdmin when creating 
-// the testuser account. We are using default 
-// port that is created by XAMPP for MySQL: 3306.
-// ----------------------------------------------
-const mysqlConfig = {
-    host: "localhost", 
-    port: 3306,
-    user: "testuser",
-    password: "mypassword",
-    database: "budgetbytesdb",
-    debug: false // Connection debugging mode is ON
-};
-
-// ----------------------------------------------
-// (C) Establishing connection using the options
-//     defined in mySQLConfig (without a query)
-// ----------------------------------------------
-const dbConnection = mysql.createConnection(mysqlConfig);
-dbConnection.connect(function(err) {
-    // unsucessful: handle any errors that might occur during connection
-    if (err) {
-        console.error('Opps. There was an error connecting to the database: ', err.stack);
-        return;
+const config = {
+    user: 'TestUser', 
+    password: 'Testing123', 
+    server: 'budget-bytes.database.windows.net', 
+    port: 1433,
+    database: 'budgetbytesdb',
+    authentication: {
+        type: 'default'
+    },
+    options: {
+        encrypt: true
     }
-    // successful: output on the screen a message that connection was successful
-    console.log('Backend is now connected to: ' + dbConnection.config.database + '.');
-});
+}
 
-// ----------------------------------------------
-// (D) This module exports dbConnection to be 
-//     used in other files (e.g, index.js)
-// ----------------------------------------------
-module.exports = dbConnection;
+async function connectToDatabase() {
+    try {
+        const dbConnection = await sql.connect(config);
+        console.log('Connected to the database');
+        return dbConnection;
+    } catch (err) {
+        console.error('Error connecting to the database:', err);
+        return err;
+    }
+}
+
+connectToDatabase();
+
+module.exports = { connectToDatabase };
