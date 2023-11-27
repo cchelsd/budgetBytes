@@ -8,7 +8,7 @@
 // const password = process.env.AZURE_SQL_PASSWORD;
 
 const server ="budget-bytes.database.windows.net"
-const database="BudgetBytesTable"
+const database="budgetbytesdb"
 const port = 1433
 const user = "groupMember"
 const password = "groupPassword4"
