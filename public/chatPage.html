@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="chat.js"></script> <!-- Add this line -->
+    <script src="authentication.js"></script>
 </head>
 <body>
 
@@ -28,6 +29,22 @@
             </div>
         </div>
     </nav>
+    
+    <form id="newUserForm">
+        <label for="userLogID">Enter your 4-digit code:</label>
+        <input type="number" id="userLogID" name="userLogID" min="1000" max="9999" required>
+
+        <h3>Dietary Preferences:</h3>
+        <label><input type="checkbox" name="isVegan"> Vegan</label><br>
+        <label><input type="checkbox" name="isVegetarian"> Vegetarian</label><br>
+        <label><input type="checkbox" name="isDairyFree"> Dairy Free</label><br>
+        <label><input type="checkbox" name="isLowCarb"> Low Carb</label><br>
+        <label><input type="checkbox" name="isPescetarian"> Pescetarian</label><br>
+
+        <button type="submit">Submit</button>
+        <div id="result"></div>
+    </form>
+
 </header>
 
 <div class="background">
