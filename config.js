@@ -1,16 +1,3 @@
-<<<<<<< Updated upstream
-// ----------------------------------------------
-// TCSS 460: Autumn 2023
-// MySQL Coonfiguration: Backend
-// ----------------------------------------------
-// Code is based on the 
-// Node.js for MySQL Library:
-// https://github.com/mysqljs/mysql
-// ----------------------------------------------
-
-// ----------------------------------------------
-// (A) Import the MySQL module or library
-// ----------------------------------------------
 const mysql = require("mysql");
 
 // ----------------------------------------------
@@ -55,7 +42,6 @@ dbConnection.connect(function(err) {
 //     used in other files (e.g, index.js)
 // ----------------------------------------------
 module.exports = dbConnection;
-=======
 // import * as dotenv from 'dotenv';
 // dotenv.config({ path: `.env.${process.env.NODE_ENV}`, debug: true });
 
@@ -82,4 +68,4 @@ export const config = {
         encrypt: true
     }
 };
->>>>>>> Stashed changes
+
