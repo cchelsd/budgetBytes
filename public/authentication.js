@@ -20,9 +20,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 // Returning User Form Submission
+// Returning User Form Submission
 returningUserForm.addEventListener('submit', async function (e) {
     e.preventDefault();
     const userLogID = returningUserLogIDInput.value;
+    
+    console.log('Form submitted. User ID:', userLogID);
 
     if (!userLogID || userLogID.length !== 4 || isNaN(userLogID)) {
         alert("Please enter a valid 4-digit code.");
@@ -33,14 +36,24 @@ returningUserForm.addEventListener('submit', async function (e) {
         const response = await fetch(`http://localhost:3000/user/${userLogID}`, { method: 'GET' });
         if (response.ok) {
             const userData = await response.json();
+            console.log('User data retrieved:', userData);
+
+            // Log values of user data properties
+            console.log('logID', userData.userLogID);
+            console.log('isVegan:', userData.isVegan);
+            console.log('isVegetarian:', userData.isVegetarian);
+            console.log('isDairyFree:', userData.isDairyFree);
+            console.log('isLowCarb:', userData.isLowCarb);
+            console.log('isPescetarian:', userData.isPescetarian);
+
             if (userData) {
-                // Assuming userData contains properties like isVegan, isVegetarian, etc.
+                const userLogID = document.getElementById('userLogID').value;
                 const isVegan = userData.isVegan === 'true' ? 'Yes' : 'No';
                 const isVegetarian = userData.isVegetarian === 'true' ? 'Yes' : 'No';
                 const isDairyFree = userData.isDairyFree === 'true' ? 'Yes' : 'No';
                 const isLowCarb = userData.isLowCarb === 'true' ? 'Yes' : 'No';
                 const isPescetarian = userData.isPescetarian === 'true' ? 'Yes' : 'No';
-                
+
                 returningResult.innerText = `Dietary Preferences: Vegan: ${isVegan}, Vegetarian: ${isVegetarian}, Dairy-Free: ${isDairyFree}, Low Carb: ${isLowCarb}, Pescetarian: ${isPescetarian}`;
                 
             } else {
@@ -54,7 +67,6 @@ returningUserForm.addEventListener('submit', async function (e) {
         alert('Error fetching user data');
     }
 });
-
 
     // New User Form Submission
     const newUserForm = document.getElementById('newUserForm');
