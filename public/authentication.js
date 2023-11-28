@@ -10,9 +10,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const codeCheckResult = document.getElementById('codeCheckResult');
     const userLogIDInput = document.getElementById('userLogID');
 
-     // Clear messages and reset button state when the user changes the 4-digit code
-     userLogIDInput.addEventListener('input', function() {
+    const newUserSubmitButton = document.getElementById('newUserSubmit'); // Assuming your submit button has this ID
+
+    // Initially disable the submit button
+    newUserSubmitButton.disabled = true;
+
+
+    // Clear messages and reset button state when the user changes the 4-digit code
+    userLogIDInput.addEventListener('input', function() {
         codeCheckResult.innerText = '';
+        newUserSubmitButton.disabled = true; // Disable the submit button when the input changes
     });
 
      // Event listener for the Check Code Button
@@ -115,13 +122,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetch(`http://localhost:3000/user/${userLogID}`);
             const data = await response.json();
             if (data.recordsets && data.recordsets[0].length === 0) {
+                newUserSubmitButton.disabled = false; // Enable the submit button
                 return true; // User ID does not exist, hence available
             } else {
+                newUserSubmitButton.disabled = true; // Keep the submit button disabled
                 return false; // User ID exists, hence not available
             }
         } catch (error) {
             console.error('Error checking userLogID:', error);
-            return false; // Assume not available if there's a network error
+            codeCheckResult.innerText = 'Error occurred while checking code.';
+            newUserSubmitButton.disabled = true; // Keep the submit button disabled
+            return false;
         }
     }
 
