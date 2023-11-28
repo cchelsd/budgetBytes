@@ -48,32 +48,36 @@ header {
     padding-left: 3px;
 }
 
+/* Main background styling */
 .background {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     background-color: rgba(255, 255, 255, 0.7);
-    /*box-shadow: 0 0 20px rgba(0,0,0,0.1);*/
     border-radius: 10px;
-    width: 80%;
-    /*max-width: 1000px;*/
-    height: 700px;
+    width: 95%;
     margin: 50px auto;
+    padding: 20px;
 }
 
+/* Flexbox setup for forms and chat container */
+/* .background > * {
+    margin: 10px;
+} */
+
+
+
+/* Chat Container */
 .chat-container {
-    width: 100%;
-    max-width: 900px;
-    /*margin: 50px auto;*/
+    flex-grow: 2;
     background-color: #fff;
     border-radius: 5px;
     box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    overflow: hidden;
     display: flex;
     flex-direction: column;
-    flex: 1;
-    position: relative;
+    overflow: hidden;
 }
+
 
 #conversation {
     list-style: none;
@@ -502,26 +506,40 @@ header {
 
 /* New/Returning User  */
 
+/* User Forms Container */
+.user-forms-container {
+    flex: 1;
+    margin-right: 20px; /* Space between forms and chat container */
+}
+
 /* User Type Selection */
 .user-type-selection {
-    text-align: center; /* Center-align the buttons */
-    margin-bottom: 20px; /* Add some space between buttons and form */
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 .user-type-selection button {
-    margin: 5px; /* Add space between buttons */
-    /* Add any additional button styles you may want */
+    margin: 5px;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-/* Styling for form containers */
+.user-type-selection button:hover {
+    background-color: #0056b3;
+}
+
+/* Form Container */
 .form-container {
-    max-width: 600px;
-    margin: 0 auto; /* Center align */
+    display: none; /* Initially hidden */
     padding: 20px;
     border-radius: 8px;
     background-color: #f8f9fa;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    display: none; /* Initially hidden */
 }
 
 /* Initially show the new user form */
@@ -529,20 +547,7 @@ header {
     display: block;
 }
 
-/* Hide the returning user form container by default */
+/* Returning User Form */
 #returningUserFormContainer {
     display: none;
-}
-
-/* Position the buttons on top of the forms */
-.user-forms-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center-align items horizontally */
-}
-
-/* Add some spacing between the forms */
-.new-user-form-container,
-#returningUserFormContainer {
-    margin-top: 20px;
 }
