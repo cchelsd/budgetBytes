@@ -551,3 +551,12 @@ header {
 #returningUserFormContainer {
     display: none;
 }
+
+#returningResult ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#returningResult li {
+    margin-bottom: 5px;
+}

@@ -5,109 +5,110 @@ document.addEventListener('DOMContentLoaded', function() {
     const returningUserFormContainer = document.getElementById('returningUserFormContainer');
     const returningResult = document.getElementById('returningResult');
     const returningUserForm = document.getElementById('returningUserForm');
-    const returningUserLogIDInput = document.getElementById('returningUserLogID');
+    const newUserForm = document.getElementById('newUserForm');
 
-    // Event listener for New User button
-    newUserButton.addEventListener('click', function() {
-        newUserFormContainer.style.display = 'block';
-        returningUserFormContainer.style.display = 'none';
-    });
+    // Toggle Form Visibility
+    newUserButton.addEventListener('click', () => toggleForms('new'));
+    returningUserButton.addEventListener('click', () => toggleForms('returning'));
 
-    // Event listener for Returning User button
-    returningUserButton.addEventListener('click', function() {
-        newUserFormContainer.style.display = 'none';
-        returningUserFormContainer.style.display = 'block';
-    });
-
-// Returning User Form Submission
-// Returning User Form Submission
-returningUserForm.addEventListener('submit', async function (e) {
-    e.preventDefault();
-    const userLogID = returningUserLogIDInput.value;
-    
-    console.log('Form submitted. User ID:', userLogID);
-
-    if (!userLogID || userLogID.length !== 4 || isNaN(userLogID)) {
-        alert("Please enter a valid 4-digit code.");
-        return;
+    // Toggle function for forms
+    function toggleForms(formType) {
+        newUserFormContainer.style.display = formType === 'new' ? 'block' : 'none';
+        returningUserFormContainer.style.display = formType === 'returning' ? 'block' : 'none';
     }
-
-    try {
-        const response = await fetch(`http://localhost:3000/user/${userLogID}`, { method: 'GET' });
-        if (response.ok) {
-            const userData = await response.json();
-            console.log('User data retrieved:', userData);
-
-            // Log values of user data properties
-            console.log('logID', userData.userLogID);
-            console.log('isVegan:', userData.isVegan);
-            console.log('isVegetarian:', userData.isVegetarian);
-            console.log('isDairyFree:', userData.isDairyFree);
-            console.log('isLowCarb:', userData.isLowCarb);
-            console.log('isPescetarian:', userData.isPescetarian);
-
-            if (userData) {
-                const userLogID = document.getElementById('userLogID').value;
-                const isVegan = userData.isVegan === 'true' ? 'Yes' : 'No';
-                const isVegetarian = userData.isVegetarian === 'true' ? 'Yes' : 'No';
-                const isDairyFree = userData.isDairyFree === 'true' ? 'Yes' : 'No';
-                const isLowCarb = userData.isLowCarb === 'true' ? 'Yes' : 'No';
-                const isPescetarian = userData.isPescetarian === 'true' ? 'Yes' : 'No';
-
-                returningResult.innerText = `Dietary Preferences: Vegan: ${isVegan}, Vegetarian: ${isVegetarian}, Dairy-Free: ${isDairyFree}, Low Carb: ${isLowCarb}, Pescetarian: ${isPescetarian}`;
-                
-            } else {
-                alert('User not found. Please check your code.');
-            }
-        } else {
-            alert('User not found. Please check your code.');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Error fetching user data');
-    }
-});
 
     // New User Form Submission
-    const newUserForm = document.getElementById('newUserForm');
     if (newUserForm) {
-        newUserForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
+        newUserForm.addEventListener('submit', handleNewUserFormSubmission);
+    }
 
-            const userLogID = document.getElementById('userLogID').value;
-            const isVegan = document.querySelector('input[name="isVegan"]').checked;
-            const isVegetarian = document.querySelector('input[name="isVegetarian"]').checked;
-            const isDairyFree = document.querySelector('input[name="isDairyFree"]').checked;
-            const isLowCarb = document.querySelector('input[name="isLowCarb"]').checked;
-            const isPescetarian = document.querySelector('input[name="isPescetarian"]').checked;
+    // Returning User Form Submission
+    returningUserForm.addEventListener('submit', handleReturningUserFormSubmission);
 
-            const userData = {
-                userLogID,
-                isVegan: isVegan.toString(),
-                isVegetarian: isVegetarian.toString(),
-                isDairyFree: isDairyFree.toString(),
-                isLowCarb: isLowCarb.toString(),
-                isPescetarian: isPescetarian.toString()
-            };
+    // Handle New User Form Submission
+    async function handleNewUserFormSubmission(e) {
+        e.preventDefault();
 
-            try {
-                const response = await fetch('http://localhost:3000/user/', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(userData)
-                });
+        const userLogID = document.getElementById('userLogID').value;
+        const isVegan = document.querySelector('input[name="isVegan"]').checked;
+        const isVegetarian = document.querySelector('input[name="isVegetarian"]').checked;
+        const isDairyFree = document.querySelector('input[name="isDairyFree"]').checked;
+        const isLowCarb = document.querySelector('input[name="isLowCarb"]').checked;
+        const isPescetarian = document.querySelector('input[name="isPescetarian"]').checked;
 
-                if (response.ok) {
-                    document.getElementById('result').innerText = 'User successfully registered.';
-                } else {
-                    const errorResponse = await response.json();
-                    console.error(errorResponse);
-                    document.getElementById('result').innerText = 'Error in registration: ' + errorResponse.error;
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('result').innerText = 'Network error.';
+        const userData = {
+            userLogID,
+            isVegan: isVegan.toString(),
+            isVegetarian: isVegetarian.toString(),
+            isDairyFree: isDairyFree.toString(),
+            isLowCarb: isLowCarb.toString(),
+            isPescetarian: isPescetarian.toString()
+        };
+
+        try {
+            const response = await fetch('http://localhost:3000/user/', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(userData)
+            });
+
+            if (response.ok) {
+                document.getElementById('result').innerText = 'User successfully registered.';
+            } else {
+                const errorResponse = await response.json();
+                console.error(errorResponse);
+                document.getElementById('result').innerText = 'Error in registration: ' + errorResponse.error;
             }
-        });
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('result').innerText = 'Network error.';
+        }
+    }
+
+    // Handle Returning User Form Submission
+    async function handleReturningUserFormSubmission(event) {
+        event.preventDefault();
+        const userLogID = document.getElementById('returningUserLogID').value;
+        if (userLogID) {
+            fetchUserData(userLogID);
+        }
+    }
+
+    // Fetch User Data
+    async function fetchUserData(userLogID) {
+        try {
+            const response = await fetch(`http://localhost:3000/user/${userLogID}`);
+            if (response.ok) {
+                const userData = await response.json();
+                displayUserData(userData);
+            } else {
+                returningResult.textContent = 'User not found or error fetching data';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            returningResult.textContent = 'Error fetching data';
+        }
+    }
+
+    // // Display User Data
+    // function displayUserData(userData) {
+    //     returningResult.innerHTML = `<strong>Dietary Preferences:</strong> ${JSON.stringify(userData, null, 2)}`;
+    // }
+    function displayUserData(userData) {
+        if (userData.recordset && userData.recordset.length > 0) {
+            const userPrefs = userData.recordset[0];
+            const prefsHtml = `
+                <ul>
+                    <li>Vegan: ${userPrefs.isVegan}</li>
+                    <li>Vegetarian: ${userPrefs.isVegetarian}</li>
+                    <li>Dairy Free: ${userPrefs.isDairyFree}</li>
+                    <li>Low Carb: ${userPrefs.isLowCarb}</li>
+                    <li>Pescetarian: ${userPrefs.isPescetarian}</li>
+                </ul>
+            `;
+            returningResult.innerHTML = `<strong>Dietary Preferences:</strong> ${prefsHtml}`;
+        } else {
+            returningResult.textContent = 'No dietary preferences found for this user.';
+        }
     }
 });
