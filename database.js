@@ -2,7 +2,7 @@ import sql from 'mssql';
 
 class Database {
   config = {};
-  poolconnection = null;
+  poolConnection = null;
   connected = false;
 
   constructor(config) {
@@ -13,8 +13,8 @@ class Database {
   async connect() {
     try {
       console.log(`Database connecting...${this.connected}`);
-      if (this.connected === false) {
-        this.poolconnection = await sql.connect(this.config);
+      if (!this.connected) {
+        this.poolConnection = await sql.connect(this.config);
         this.connected = true;
         console.log('Database connection successful');
       } else {
@@ -27,25 +27,21 @@ class Database {
 
   async disconnect() {
     try {
-      this.poolconnection.close();
-      console.log('Database connection closed');
+      if (this.poolConnection) {
+        this.poolConnection.close();
+        this.connected = false;
+        console.log('Database connection closed');
+      }
     } catch (error) {
       console.error(`Error closing database connection: ${error}`);
     }
   }
 
-  async executeQuery(query) {
-    await this.connect();
-    const request = this.poolconnection.request();
-    const result = await request.query(query);
-
-    return result.rowsAffected[0];
-  }
-
   async createUser(user) {
-    const pool = await this.connectionPool;
+    await this.connect();
     const { userLogID, isVegan, isVegetarian, isDairyFree, isLowCarb, isPescetarian } = user;
-    return pool.request()
+    const request = this.poolConnection.request();
+    return request
       .input('userLogID', sql.VarChar, userLogID)
       .input('isVegan', sql.VarChar, isVegan)
       .input('isVegetarian', sql.VarChar, isVegetarian)
@@ -55,25 +51,25 @@ class Database {
       .query('INSERT INTO BudgetBytesTable (userLogID, isVegan, isVegetarian, isDairyFree, isLowCarb, isPescetarian) VALUES (@userLogID, @isVegan, @isVegetarian, @isDairyFree, @isLowCarb, @isPescetarian)');
   }
 
-
- async readAll() {
-    const pool = await this.connectionPool;
-    return pool.request().query('SELECT * FROM BudgetBytesTable');
+  async readAll() {
+    await this.connect();
+    const request = this.poolConnection.request();
+    return request.query('SELECT * FROM BudgetBytesTable');
   }
 
-
- async readUser(userLogID) {
-    const pool = await this.connectionPool;
-    return pool.request()
+  async readUser(userLogID) {
+    await this.connect();
+    const request = this.poolConnection.request();
+    return request
       .input('userLogID', sql.VarChar, userLogID)
       .query('SELECT * FROM BudgetBytesTable WHERE userLogID = @userLogID');
   }
 
-
- async updateUser(userLogID, updatedUser) {
-    const pool = await this.connectionPool;
+  async updateUser(userLogID, updatedUser) {
+    await this.connect();
     const { isVegan, isVegetarian, isDairyFree, isLowCarb, isPescetarian } = updatedUser;
-    return pool.request()
+    const request = this.poolConnection.request();
+    return request
       .input('userLogID', sql.VarChar, userLogID)
       .input('isVegan', sql.VarChar, isVegan)
       .input('isVegetarian', sql.VarChar, isVegetarian)
@@ -84,8 +80,9 @@ class Database {
   }
 
   async deleteUser(userLogID) {
-    const pool = await this.connectionPool;
-    return pool.request()
+    await this.connect();
+    const request = this.poolConnection.request();
+    return request
       .input('userLogID', sql.VarChar, userLogID)
       .query('DELETE FROM BudgetBytesTable WHERE userLogID = @userLogID');
   }

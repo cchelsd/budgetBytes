@@ -3,10 +3,10 @@
   "type": "module",
   "version": "1.0.0",
   "description": "## Description: Budget-Bytes is a web-based chat assistant that offers personalized culinary experiences for college students. It provides effortless interaction and customized meal suggestions based on user queries and available ingredients, focusing on affordability and simplicity.",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
