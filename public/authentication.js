@@ -35,3 +35,9 @@ document.getElementById('newUserForm').addEventListener('submit', async function
         document.getElementById('result').innerText = 'Network error.';
     }
 });
+
+document.getElementById('loadData').addEventListener('click', () => {
+    fetchData();
+});
+
+

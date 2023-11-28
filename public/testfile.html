@@ -1,0 +1,33 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+        
+    <form id="newUserForm">
+        <label for="userLogID">Enter your 4-digit code:</label>
+        <input type="number" id="userLogID" name="userLogID" min="1000" max="9999" required>
+
+        <h3>Dietary Preferences:</h3>
+        <label><input type="checkbox" name="isVegan"> Vegan</label><br>
+        <label><input type="checkbox" name="isVegetarian"> Vegetarian</label><br>
+        <label><input type="checkbox" name="isDairyFree"> Dairy Free</label><br>
+        <label><input type="checkbox" name="isLowCarb"> Low Carb</label><br>
+        <label><input type="checkbox" name="isPescetarian"> Pescetarian</label><br>
+
+        <button type="submit">Submit</button>
+        <div id="result"></div>
+    </form>
+
+    <!-- test -->
+<h1>Data from Azure SQL</h1>
+<script src="authentication.js"></script>
+
+<button id="loadData">Load Data</button>
+<div id="dataDisplay"></div>
+    
+</body>
+</html>
