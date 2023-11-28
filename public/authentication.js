@@ -12,6 +12,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const newUserSubmitButton = document.getElementById('newUserSubmit'); // Assuming your submit button has this ID
 
+    const userLogID = document.getElementById('returningUserLogID').value;
+    localStorage.setItem('currentUserLogID', userLogID);  // Store the user ID
+
     // Initially disable the submit button
     newUserSubmitButton.disabled = true;
 
@@ -97,6 +100,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const userLogID = document.getElementById('returningUserLogID').value;
         if (userLogID) {
             fetchUserData(userLogID);
+             // Store the user ID in localStorage after fetching user data
+            localStorage.setItem('currentUserLogID', userLogID);
         }
     }
 

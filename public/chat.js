@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
     // when a send button is clicked to send a message
     $('button').on('click', function () {
         // capture the message value from the textbox
@@ -53,15 +52,70 @@ $(document).ready(function () {
     });
 });
 
+  // Function to get the current user's ID
+  function getCurrentUserID() {
+    return localStorage.getItem('currentUserLogID');
+}
+
+// Function to fetch user dietary preferences
+async function fetchUserDietaryPreferences(userID) {
+    try {
+        const response = await fetch(`http://localhost:3000/user/${userID}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch user data');
+        }
+        const userData = await response.json();
+        console.log("Fetched user data:", userData);
+        return userData.recordset[0];
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}
+
+async function getUserDietaryMessage() {
+    const currentUserID = getCurrentUserID();
+    console.log("Current User ID:", currentUserID);
+
+    let dietaryMessage = "";
+
+    if (currentUserID) {
+        const userPrefs = await fetchUserDietaryPreferences(currentUserID);
+
+       if (userPrefs) {
+           if (userPrefs.isVegan === 'true') {
+               dietaryMessage += "It is important that you must only give the user Vegan Recipe suggestions. You must give vegan-version of recipes unless the user specifically says something like 'Give me non-vegan recipes'...";
+           }
+           if (userPrefs.isVegetarian === 'true') {
+               dietaryMessage += "It is important that you must only give the user Vegetarian Recipe suggestions. You must give vegetarian-version of recipes unless the user specifically says something like 'Give me non-vegetarian recipes'...";
+           }
+           if (userPrefs.isDairyFree === 'true') {
+               dietaryMessage += "It is important that you must only give the user Dairy-Free Recipe suggestions. You must give dairy-free-version of recipes unless the user specifically says something like 'Give me non-dairy-free recipes'...";
+           }   
+           if (userPrefs.isLowCarb === 'true') {
+               dietaryMessage += "It is important that you must only give the user Low-Carb Recipe suggestions. You must give low-carb-version of recipes unless the user specifically says something like 'Give me non-low-carb recipes'...";
+           }    
+           if (userPrefs.isPescetarian === 'true') {
+               dietaryMessage += "It is important that you must only give the user Pescetarian Recipe suggestions. You must give pescetarian-version of recipes unless the user specifically says something like 'Give me non-pescetarian recipes'...";
+           }  
+       }         
+    }
+    
+    return dietaryMessage;
+}
+
+
 function openAPIConnect(userText) {
-    return new Promise(function (resolve, reject) {
+    return new Promise(async function (resolve, reject) {
+        const dietaryMessage = await getUserDietaryMessage();
+
         // ADD YOUR API KEY BELOW
         var openAIKey = "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";
 
         // Specify the model to use
         var serviceModel = "text-davinci-003";
         var serviceEndpoint = 'https://api.openai.com/v1/completions';
-        var maxTokens = 150;
+        var maxTokens = 200;
 
         // Custom system message
         var systemMessage = "Your name is BUDGET-BYTE, " +
@@ -74,7 +128,10 @@ function openAPIConnect(userText) {
             "affordable, and delicious meal options. Your recommendations " +
             "and interactions should resonate with the difficulties and preferences of this " +
             "target audience." +
-            "Ensure your responses are concise and to the point. " +
+            dietaryMessage +
+            "At the beginning of your conversation, your greeting to the user should simple, friendly and less than"+
+            "Ensure your responses are friendly, concise and to the point. " +
+            "Ensure your responses are friendly, concise and to the point. " +
             "When presenting multiple options or steps, format your output in a clear " +
             "list form for better readability and user experience.\n";
 
