@@ -1,21 +1,17 @@
 import express from 'express';
+import cors from 'cors';  // Import CORS module
 import { config } from './config.js';
 import Database from './database.js';
-// const express = require("express")
-// retrieve the MySQL DB Configuration Module
-// use this library for parsing HTTP body requests
-
-// Import App routes
-import user from './user.js';
+import user from './user.js';  // Import App routes
 
 const port = process.env.PORT || 3000;
+var app = express();
 
-// const app = express();
-var app = express(express.json);
+app.use(cors());  // Enable CORS for all routes
+app.use(express.json());  // Use express.json middleware to parse JSON request bodies
 
 // Connect App routes
 app.use('/user', user);
-
 
 // Start the server
 app.listen(port, () => {

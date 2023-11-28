@@ -10,15 +10,15 @@ document.getElementById('newUserForm').addEventListener('submit', async function
 
     const userData = {
         userLogID,
-        isVegan,
-        isVegetarian,
-        isDairyFree,
-        isLowCarb,
-        isPescetarian
+        isVegan: isVegan.toString(),
+        isVegetarian: isVegetarian.toString(),
+        isDairyFree: isDairyFree.toString(),
+        isLowCarb: isLowCarb.toString(),
+        isPescetarian: isPescetarian.toString()
     };
 
     try {
-        const response = await fetch('/user/', {
+        const response = await fetch('http://localhost:3000/user/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -29,9 +29,14 @@ document.getElementById('newUserForm').addEventListener('submit', async function
         if (response.ok) {
             document.getElementById('result').innerText = 'User successfully registered.';
         } else {
-            document.getElementById('result').innerText = 'Error in registration.';
+            const errorResponse = await response.json();
+            console.error(errorResponse);
+            document.getElementById('result').innerText = 'Error in registration: ' + errorResponse.error;
         }
     } catch (error) {
         document.getElementById('result').innerText = 'Network error.';
     }
 });
+
+
+
