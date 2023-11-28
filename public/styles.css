@@ -443,7 +443,8 @@ header {
     padding-bottom: 50px;
 }
 
-/* User Authentication Form */
+
+/**User Authentication Form */
 
 .new-user-form-container {
     max-width: 600px;
@@ -499,6 +500,49 @@ header {
     color: #28a745;
 }
 
+/* New/Returning User  */
 
+/* User Type Selection */
+.user-type-selection {
+    text-align: center; /* Center-align the buttons */
+    margin-bottom: 20px; /* Add some space between buttons and form */
+}
 
+.user-type-selection button {
+    margin: 5px; /* Add space between buttons */
+    /* Add any additional button styles you may want */
+}
 
+/* Styling for form containers */
+.form-container {
+    max-width: 600px;
+    margin: 0 auto; /* Center align */
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: none; /* Initially hidden */
+}
+
+/* Initially show the new user form */
+#newUserFormContainer {
+    display: block;
+}
+
+/* Hide the returning user form container by default */
+#returningUserFormContainer {
+    display: none;
+}
+
+/* Position the buttons on top of the forms */
+.user-forms-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center-align items horizontally */
+}
+
+/* Add some spacing between the forms */
+.new-user-form-container,
+#returningUserFormContainer {
+    margin-top: 20px;
+}
