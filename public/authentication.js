@@ -1,4 +1,6 @@
+// Wait for the DOM to be fully loaded before executing the code
 document.addEventListener('DOMContentLoaded', function() {
+    // Get references to various HTML elements by their IDs
     const newUserButton = document.getElementById('newUserButton');
     const returningUserButton = document.getElementById('returningUserButton');
     const newUserFormContainer = document.getElementById('newUserFormContainer');
@@ -10,14 +12,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const codeCheckResult = document.getElementById('codeCheckResult');
     const userLogIDInput = document.getElementById('userLogID');
 
-    const newUserSubmitButton = document.getElementById('newUserSubmit'); // Assuming your submit button has this ID
+    // Get a reference to the "Submit" button for new user registration
+    const newUserSubmitButton = document.getElementById('newUserSubmit');
 
+    // Get the userLogID value from the returning user form and store it in localStorage
     const userLogID = document.getElementById('returningUserLogID').value;
-    localStorage.setItem('currentUserLogID', userLogID);  // Store the user ID
+    localStorage.setItem('currentUserLogID', userLogID); // Store the user ID
 
-    // Initially disable the submit button
+    // Initially disable the submit button for new user registration
     newUserSubmitButton.disabled = true;
-
 
     // Clear messages and reset button state when the user changes the 4-digit code
     userLogIDInput.addEventListener('input', function() {
@@ -25,8 +28,8 @@ document.addEventListener('DOMContentLoaded', function() {
         newUserSubmitButton.disabled = true; // Disable the submit button when the input changes
     });
 
-     // Event listener for the Check Code Button
-     checkCodeButton.addEventListener('click', async function() {
+    // Event listener for the Check Code Button
+    checkCodeButton.addEventListener('click', async function() {
         const userLogID = userLogIDInput.value;
         if (userLogID && userLogID.length === 4) {
             const available = await checkUserLogIDAvailability(userLogID);
@@ -36,28 +39,29 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Toggle Form Visibility
+    // Toggle Form Visibility when clicking the "New User" or "Returning User" buttons
     newUserButton.addEventListener('click', () => toggleForms('new'));
     returningUserButton.addEventListener('click', () => toggleForms('returning'));
 
-    // Toggle function for forms
+    // Function to toggle the visibility of new and returning user forms
     function toggleForms(formType) {
         newUserFormContainer.style.display = formType === 'new' ? 'block' : 'none';
         returningUserFormContainer.style.display = formType === 'returning' ? 'block' : 'none';
     }
 
-    // New User Form Submission
+    // Add a submission event listener for the New User Form
     if (newUserForm) {
         newUserForm.addEventListener('submit', handleNewUserFormSubmission);
     }
 
-    // Returning User Form Submission
+    // Add a submission event listener for the Returning User Form
     returningUserForm.addEventListener('submit', handleReturningUserFormSubmission);
 
-    // Handle New User Form Submission
+    // Handle submission of the New User Form
     async function handleNewUserFormSubmission(e) {
         e.preventDefault();
 
+        // Gather form input values
         const userLogID = document.getElementById('userLogID').value;
         const isVegan = document.querySelector('input[name="isVegan"]').checked;
         const isVegetarian = document.querySelector('input[name="isVegetarian"]').checked;
@@ -65,6 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const isLowCarb = document.querySelector('input[name="isLowCarb"]').checked;
         const isPescetarian = document.querySelector('input[name="isPescetarian"]').checked;
 
+        // Create a user data object
         const userData = {
             userLogID,
             isVegan: isVegan.toString(),
@@ -75,9 +80,10 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         try {
+            // Send a POST request to the server to register the new user
             const response = await fetch('http://localhost:3000/user/', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(userData)
             });
 
@@ -94,18 +100,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Handle Returning User Form Submission
+    // Handle submission of the Returning User Form
     async function handleReturningUserFormSubmission(event) {
         event.preventDefault();
         const userLogID = document.getElementById('returningUserLogID').value;
         if (userLogID) {
+            // Fetch user data from the server
             fetchUserData(userLogID);
-             // Store the user ID in localStorage after fetching user data
+            // Store the user ID in localStorage after fetching user data
             localStorage.setItem('currentUserLogID', userLogID);
         }
     }
 
-    // Fetch User Data
+    // Fetch user data from the server
     async function fetchUserData(userLogID) {
         try {
             const response = await fetch(`http://localhost:3000/user/${userLogID}`);
@@ -141,6 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Function to display user data in the returning user form
     function displayUserData(userData) {
         if (userData.recordset && userData.recordset.length > 0) {
             const userPrefs = userData.recordset[0];
@@ -159,5 +167,3 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
-
-
