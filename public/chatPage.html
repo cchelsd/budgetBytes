@@ -32,7 +32,33 @@
 
 </header>
 
+ 
+
 <div class="background">
+     <!-- New User Form -->
+  <div class="new-user-form-container">
+    <form id="newUserForm" class="new-user-form">
+        <h2>New User Registration</h2>
+        <div class="form-group">
+            <label for="userLogID">Enter your 4-digit code:</label>
+            <input type="number" id="userLogID" name="userLogID" class="form-control" min="1000" max="9999" required>
+        </div>
+
+        <h3>Dietary Preferences:</h3>
+        <div class="checkbox-group">
+            <label class="checkbox-label"><input type="checkbox" name="isVegan"> Vegan</label>
+            <label class="checkbox-label"><input type="checkbox" name="isVegetarian"> Vegetarian</label>
+            <label class="checkbox-label"><input type="checkbox" name="isDairyFree"> Dairy Free</label>
+            <label class="checkbox-label"><input type="checkbox" name="isLowCarb"> Low Carb</label>
+            <label class="checkbox-label"><input type="checkbox" name="isPescetarian"> Pescetarian</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <div id="result"></div>
+    </form>
+</div>
+
+
     <div class="chat-container">
         <div id="chatTitle">
             <p>Chat with Budget Bytes</p>
@@ -59,6 +85,7 @@
     <p class="text-center text-muted">© 2023 Budget Bytes</p>
 </footer>
 
+<script src="authentication.js"></script>
 <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
