@@ -6,6 +6,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const returningResult = document.getElementById('returningResult');
     const returningUserForm = document.getElementById('returningUserForm');
     const newUserForm = document.getElementById('newUserForm');
+    const checkCodeButton = document.getElementById('checkCodeButton');
+    const codeCheckResult = document.getElementById('codeCheckResult');
+    const userLogIDInput = document.getElementById('userLogID');
+
+     // Clear messages and reset button state when the user changes the 4-digit code
+     userLogIDInput.addEventListener('input', function() {
+        codeCheckResult.innerText = '';
+    });
+
+     // Event listener for the Check Code Button
+     checkCodeButton.addEventListener('click', async function() {
+        const userLogID = userLogIDInput.value;
+        if (userLogID && userLogID.length === 4) {
+            const available = await checkUserLogIDAvailability(userLogID);
+            codeCheckResult.innerText = available ? '4-digit code is available.' : 'This 4-digit code already exists.';
+        } else {
+            codeCheckResult.innerText = 'Please enter a valid 4-digit code.';
+        }
+    });
 
     // Toggle Form Visibility
     newUserButton.addEventListener('click', () => toggleForms('new'));
@@ -90,10 +109,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // // Display User Data
-    // function displayUserData(userData) {
-    //     returningResult.innerHTML = `<strong>Dietary Preferences:</strong> ${JSON.stringify(userData, null, 2)}`;
-    // }
+    // Function to check if userLogID is available
+    async function checkUserLogIDAvailability(userLogID) {
+        try {
+            const response = await fetch(`http://localhost:3000/user/${userLogID}`);
+            const data = await response.json();
+            if (data.recordsets && data.recordsets[0].length === 0) {
+                return true; // User ID does not exist, hence available
+            } else {
+                return false; // User ID exists, hence not available
+            }
+        } catch (error) {
+            console.error('Error checking userLogID:', error);
+            return false; // Assume not available if there's a network error
+        }
+    }
+
     function displayUserData(userData) {
         if (userData.recordset && userData.recordset.length > 0) {
             const userPrefs = userData.recordset[0];
@@ -112,3 +143,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
+
