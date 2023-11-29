@@ -48,32 +48,36 @@ header {
     padding-left: 3px;
 }
 
+/* Main background styling */
 .background {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     background-color: rgba(255, 255, 255, 0.7);
-    /*box-shadow: 0 0 20px rgba(0,0,0,0.1);*/
     border-radius: 10px;
-    width: 80%;
-    /*max-width: 1000px;*/
-    height: 700px;
+    width: 95%;
     margin: 50px auto;
+    padding: 20px;
 }
 
+/* Flexbox setup for forms and chat container */
+/* .background > * {
+    margin: 10px;
+} */
+
+
+
+/* Chat Container */
 .chat-container {
-    width: 100%;
-    max-width: 900px;
-    /*margin: 50px auto;*/
+    flex-grow: 2;
     background-color: #fff;
     border-radius: 5px;
     box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    overflow: hidden;
     display: flex;
     flex-direction: column;
-    flex: 1;
-    position: relative;
+    overflow: hidden;
 }
+
 
 #conversation {
     list-style: none;
@@ -496,4 +500,115 @@ header {
     stroke: none;
 }
 
+/**User Authentication Form */
 
+.new-user-form-container {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.new-user-form h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+
+.checkbox-group {
+    margin-bottom: 20px;
+}
+
+.checkbox-label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+#result {
+    margin-top: 20px;
+    color: #28a745;
+}
+
+/* New/Returning User  */
+
+/* User Forms Container */
+.user-forms-container {
+    flex: 1;
+    margin-right: 20px; /* Space between forms and chat container */
+}
+
+/* User Type Selection */
+.user-type-selection {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.user-type-selection button {
+    margin: 5px;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.user-type-selection button:hover {
+    background-color: #0056b3;
+}
+
+/* Form Container */
+.form-container {
+    display: none; /* Initially hidden */
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Initially show the new user form */
+#newUserFormContainer {
+    display: block;
+}
+
+/* Returning User Form */
+#returningUserFormContainer {
+    display: none;
+}
+
+#returningResult ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#returningResult li {
+    margin-bottom: 5px;
+}
