@@ -315,5 +315,3 @@ async function addToHistory(recipeID, userLogID, recipeName, ingredients, instru
         console.log('Error:', error);
     }
 }
-
-module.exports = { getCurrentUserID } ;

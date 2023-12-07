@@ -1,5 +1,3 @@
-import { getCurrentUserID } from './chat.js';
-
 async function fetchUserFavorites(userID) {
     try {
         const response = await fetch(`http://localhost:3001/favorite`, {
