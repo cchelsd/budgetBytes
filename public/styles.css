@@ -454,6 +454,7 @@ header {
     padding-bottom: 50px;
 }
 
+/* ---------------------- favorite recipes ---------------------- */
 .heart-button {
     position: absolute;
     top: 5px;
@@ -487,12 +488,11 @@ header {
     stroke: none;
 }
 
-#recipes {
+.recipes {
     display: block;
     text-align: center;
     width: 88%;
     margin: auto;
-    padding-left: 13px;
 }
   
 .recipe-card {
@@ -518,6 +518,7 @@ header {
     text-align: left;
 }
 
+/* ---------------------- saved recipes ---------------------- */
 .bookmark-button {
     position: absolute;
     top: 8px;
