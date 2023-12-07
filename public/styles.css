@@ -614,3 +614,7 @@ header {
 #map {
     height: 520px;
 }
+.highlight {
+    background-color: yellow;
+    font-weight: bold;
+}
