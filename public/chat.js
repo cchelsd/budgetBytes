@@ -33,9 +33,9 @@ $(document).ready(function () {
                 }
 
                 // Check for potential recipe details
-                if ((responseData.includes("Ingredients:") || responseData.includes("Instructions:")) && !responseData.includes("ideas")) {
+                if ((responseData.includes("Ingredients") || responseData.includes("Instructions")) && !responseData.includes("ideas")) {
                     // Display the individual recipe details in a structured format
-                    let recipeId = new Date().getTime();
+                    let recipeId = new Date().getTime(); // generate unique recipe id
                     displayRecipe(responseData, d, recipeId);
                 } else {
                     // Split the responseData into lines
@@ -74,14 +74,14 @@ $(document).ready(function () {
 });
 
   // Function to get the current user's ID
-  function getCurrentUserID() {
+function getCurrentUserID() {
     return localStorage.getItem('currentUserLogID');
 }
 
 // Function to fetch user dietary preferences
 async function fetchUserDietaryPreferences(userID) {
     try {
-        const response = await fetch(`http://localhost:3000/user/${userID}`);
+        const response = await fetch(`http://localhost:3001/user/${userID}`);
         if (!response.ok) {
             throw new Error('Failed to fetch user data');
         }
@@ -204,7 +204,13 @@ function displayRecipe(recipeDetails, d, recipeID) {
     var recipeName = sections[0].trim();
     var ingredients = sections[1].trim();
     var instructions = sections[2].trim();
+    var savedRecipeID = recipeID;
+    var userLogID = getCurrentUserID();
 
+    if (userLogID !== "") {
+        addToHistory(recipeID, userLogID, recipeName, ingredients, instructions);
+    }
+    
     // Format ingredients section
     var formattedIngredients = ingredients.split(/\n/)
         .filter(item => item.trim() !== "") // Remove empty lines
@@ -218,52 +224,96 @@ function displayRecipe(recipeDetails, d, recipeID) {
     // Display the formatted recipe details
     $('#conversation').append("<li class='message-left'><div class='message-hour'>" + d + " <span class='ion-android-done-all'></span></div>" +
         "<div class='message-avatar'><div class='avatar ion-ios-person .bot'><img src='images/logo.png' alt='chatGPT avatar' id='chatGPTAvatar'></div>" +
-        "<div class='name'>chatGPT</div></div><div class='message-text'><div class='favorite-button'><button id='" + recipeID + "' class='heart-button'>" +
+        "<div class='name'>chatGPT</div></div><div class='message-text'><div class='save-button'><button id='" + savedRecipeID + "' class='bookmark-button'>" +
+        "<svg class='bookmark-icon' viewBox='0 0 24 24'><path class='bookmark-shape' d='M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 " +
+        "15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2'></path></svg></button></div><div class='favorite-button'><button id='" + recipeID + "' class='heart-button'>" +
         "<svg class='heart-icon' viewBox='0 0 24 24'><path class='heart-shape' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 " +
         "3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'></path></svg></button></div><p>" + recipeName + "</p>" +
         "<h4>Recipe Details</h4><p>Ingredients:</p><ul>" + formattedIngredients + "</ul><p>Instructions:</p><ol>" + formattedInstructions + "</ol></div></li>");
     $('#message').val('');
 
-    $('#' + recipeID).on('click', function (e) {
-        e.stopPropagation(); // Prevents event bubbling
-        let heartButton = $(this);
 
-        if (heartButton.hasClass('favorite')) {
-            heartButton.removeClass('favorite');
-            // Send a DELETE request to remove from favorites
-            fetch(`http://localhost:3001/favorite/${recipeID}`, {
-                method: 'DELETE'
-            })
-                .then(response => {
-                    if (response.ok) {
-                        console.log('Removed from favorites!');
-                    } else {
-                        console.error('Error removing from favorites!');
-                    }
-                })
-                .catch(error => {
-                    console.error('Fetch error:', error);
-                });
-        } else {
-            heartButton.addClass('favorite');
-            // Send a POST request to add to favorites
-            fetch('http://localhost:3001/favorite', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json' // Set the Content-Type to application/json
-                },
-                body: JSON.stringify({ id: recipeID, recipe: JSON.stringify({name: recipeName, ingredients: formattedIngredients, instructions: formattedInstructions})})
-            })
-            .then(response => {
-                if (response.ok) {
-                    console.log('Added to favorites!');
-                } else {
-                    console.error('Error adding to favorites!');
-                }
-            })
-            .catch(error => {
-                console.error('Fetch error:', error);
-            });
+    $('#' + savedRecipeID + ', #' + recipeID).on('click', function (e) {
+        e.stopPropagation(); // Prevents event bubbling
+        let clickedButton = $(this);
+        let recipeID = clickedButton.attr('id');
+        let userLogID = getCurrentUserID();
+        console.log(clickedButton);
+
+        if (userLogID == "") {
+            alert("Please log in or create an account to save or favorite a recipe");
+            return;
+        }
+    
+        if (clickedButton.hasClass('heart-button')) {
+            // Heart button clicked
+            handleButtonClick('favorite', recipeID, userLogID, clickedButton, `favorite/${recipeID}`, 'favorite', recipeName, formattedIngredients, formattedInstructions);
+        } else if (clickedButton.hasClass('bookmark-button')) {
+            // Bookmark button clicked
+            handleButtonClick('saved', recipeID, userLogID, clickedButton, `saved/recipe/${recipeID}`, 'saved', recipeName, formattedIngredients, formattedInstructions);
         }
     });
 }
+
+function handleButtonClick(className, recipeID, userLogID, button, deleteEndpoint, postEndpoint, recipeName, ingredients, instructions) {
+    if (button.hasClass(className)) {
+        button.removeClass(className);
+        fetch(`http://localhost:3001/${deleteEndpoint}`, {
+            method: 'DELETE',
+            headers: {
+                'user-log-id': userLogID
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log(`Removed from ${className}!`);
+            } else {
+                console.error(`Error removing from ${className}.`);
+            }
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
+    } else {
+        button.addClass(className);
+        // Send a POST request to add to favorites
+        fetch(`http://localhost:3001/${postEndpoint}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'user-log-id': userLogID
+            },
+            body: JSON.stringify({ id: recipeID, recipe: JSON.stringify({name: recipeName, ingredients: ingredients, instructions: instructions})})
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log(`Added to ${className}!`);
+            } else {
+                console.error(`Error adding to ${className}.`);
+            }
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
+    }
+}
+
+async function addToHistory(recipeID, userLogID, recipeName, ingredients, instructions) {
+    try {
+        const response = await fetch(`http://localhost:3001/history`, {
+            method : 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'user-log-id': userLogID
+            },
+            body: JSON.stringify({ id: recipeID, recipe: JSON.stringify({name: recipeName, ingredients: ingredients, instructions: instructions})})
+        });
+        if (response.ok) {
+            console.log('Added to recipe history!');
+        }     
+      } catch (error) {
+        console.log('Error:', error);
+    }
+}
+
+module.exports = { getCurrentUserID } ;

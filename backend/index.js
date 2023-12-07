@@ -3,6 +3,9 @@
 const express = require("express");
 const cors = require("cors");
 const favoriteRoutes = require("./routes/favoriteRoutes");
+const userRoutes = require("./routes/userRoutes");
+const savedRoutes = require("./routes/savedRoutes");
+const historyRoutes = require("./routes/historyRoutes");
 
 // var bodyParser = require('body-parser');
 
@@ -32,6 +35,9 @@ app.use(cors());
 // // The routes are prefixed with '/attractions'
 // // ----------------------------------------------
 app.use('/favorite', favoriteRoutes);
+app.use('/user', userRoutes);
+app.use('/saved', savedRoutes);
+app.use('/history', historyRoutes);
 
 app.listen(3001, () => {
     console.log("Express server is running and listening");
