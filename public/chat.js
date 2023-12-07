@@ -2,7 +2,7 @@ $(document).ready(function () {
     let message = $('#message');
     let conversation = $('#conversation');
     // when a send button is clicked to send a message
-    $('button').on('click', function () {
+    $('#send').on('click', function () {
         // capture the message value from the textbox
         var text = $('#message').val();
         // output on the console window for debugging purposes
@@ -206,10 +206,6 @@ function displayRecipe(recipeDetails, d, recipeID) {
     var instructions = sections[2].trim();
     var savedRecipeID = recipeID;
     var userLogID = getCurrentUserID();
-
-    if (userLogID !== "") {
-        addToHistory(recipeID, userLogID, recipeName, ingredients, instructions);
-    }
     
     // Format ingredients section
     var formattedIngredients = ingredients.split(/\n/)
@@ -219,6 +215,10 @@ function displayRecipe(recipeDetails, d, recipeID) {
 
     // Format instructions section
     var formattedInstructions = instructions.split(/\d+\./).filter(step => step.trim() !== "").map(step => "<li>" + step.trim() + "</li>").join("");
+
+    if (userLogID !== "") {
+        addToHistory(recipeID, userLogID, recipeName, ingredients, formattedInstructions);
+    }
 
     $('#message').css("border", "1px solid #f4f5f9");
     // Display the formatted recipe details

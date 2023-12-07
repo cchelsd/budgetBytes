@@ -12,7 +12,6 @@ async function fetchUserFavorites(userID) {
         }
         const userFavorites = await response.json();   
         const recipes = userFavorites[0];  
-        console.log(recipes);  
         return recipes;
     } catch (error) {
         console.error('Error:', error);
@@ -21,7 +20,9 @@ async function fetchUserFavorites(userID) {
 }
 
 async function displayRecipeCards(userID) {
+    $(".logIn").empty();
     const recipes = await fetchUserFavorites(userID);
+    console.log(recipes);
     recipes.forEach(recipe => {
         const recipeCard = $("<div>").addClass("recipe-card")
         const recipeDetails = $("<div>").addClass("recipe-details");
@@ -60,7 +61,7 @@ async function displayRecipeCards(userID) {
         // Append the created recipe details to the card
         recipeCard.on("click", () => handleRecipeSelection(recipeCard));
         recipeCard.append(recipeDetails);
-        $('#recipes').append(recipeCard);
+        $('.recipes').append(recipeCard);
     });
 }
 
@@ -81,5 +82,7 @@ async function displayRecipeCards(userID) {
 }
 
 $(document).ready(function() {
-    displayRecipeCards(getCurrentUserID());
+    if (getCurrentUserID() !== "") {
+        displayRecipeCards(getCurrentUserID());
+    }
 });
