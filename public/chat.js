@@ -198,26 +198,55 @@ function openAPIConnect(userText) {
 }
 
 function displayRecipe(recipeDetails, d, recipeID) {
-    // Split the recipe details into sections
-    var sections = recipeDetails.split(/Ingredients:|Instructions:/);
-    console.log(sections);
-    var recipeName = sections[0].trim();
-    var ingredients = sections[1].trim();
-    var instructions = sections[2].trim();
-    var savedRecipeID = recipeID;
-    var userLogID = getCurrentUserID();
-    
-    // Format ingredients section
-    var formattedIngredients = ingredients.split(/\n/)
-        .filter(item => item.trim() !== "") // Remove empty lines
-        .map(item => "<li>" + item.replace(/^- /, '') + "</li>") // Remove the leading dash and add <li> tags
-        .join("");
 
-    // Format instructions section
-    var formattedInstructions = instructions.split(/\d+\./).filter(step => step.trim() !== "").map(step => "<li>" + step.trim() + "</li>").join("");
+    console.log("Recipe Details:", recipeDetails);
+    const lines = recipeDetails.split('\n');
+    console.log(lines);
+
+    let ingredients = [];
+    let instructions = [];
+    let isInstructions = false;
+
+    const colonIndex = recipeDetails.indexOf(':', recipeDetails.indexOf('\n') + 1);
+    const recipeName = recipeDetails.substring(recipeDetails.indexOf('\n') + 1, colonIndex + 1);
+    console.log(recipeName);
+
+    lines.forEach(line => {
+        line = line.trim();
+
+        if (line.startsWith('Instructions:') || line.startsWith('Directions:')) {
+            isInstructions = true;
+        } else if (line.startsWith('-')) {
+            isInstructions = false;
+        }
+
+        if (isInstructions) {
+            if (line !== "") {
+                instructions.push('<li>' + line.replace(/^\d+\.\s/,'') + '</li>');
+            }
+        } else {
+            if (line.trim().startsWith('-')) {
+                ingredients.push('<li>' + line.trim().substring(1) + '</li>');
+            }
+        }
+    });
+
+    // Remove 'Ingredients' and 'Instructions' if present
+    if (ingredients.length > 0 && ingredients[0].toLowerCase().includes('ingredients')) {
+        ingredients.shift();
+    }
+
+    if (instructions.length > 0 && instructions[0].toLowerCase().includes('instructions' || 'directions')) {
+        instructions.shift();
+    }
+    
+    console.log("Ingredients", ingredients);
+    console.log("Instructions", instructions);
+    const savedRecipeID = recipeID;
+    const userLogID = getCurrentUserID();
 
     if (userLogID !== "") {
-        addToHistory(recipeID, userLogID, recipeName, ingredients, formattedInstructions);
+        addToHistory(recipeID, userLogID, recipeName, ingredients, instructions);
     }
 
     $('#message').css("border", "1px solid #f4f5f9");
@@ -229,7 +258,7 @@ function displayRecipe(recipeDetails, d, recipeID) {
         "15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2'></path></svg></button></div><div class='favorite-button'><button id='" + recipeID + "' class='heart-button'>" +
         "<svg class='heart-icon' viewBox='0 0 24 24'><path class='heart-shape' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 " +
         "3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'></path></svg></button></div><p>" + recipeName + "</p>" +
-        "<h4>Recipe Details</h4><p>Ingredients:</p><ul>" + formattedIngredients + "</ul><p>Instructions:</p><ol>" + formattedInstructions + "</ol></div></li>");
+        "<h4>Recipe Details</h4><p>Ingredients:</p><ul>" + ingredients.join('') + "</ul><p>Instructions:</p><ol>" + instructions.join('') + "</ol></div></li>");
     $('#message').val('');
 
 
@@ -247,15 +276,15 @@ function displayRecipe(recipeDetails, d, recipeID) {
     
         if (clickedButton.hasClass('heart-button')) {
             // Heart button clicked
-            handleButtonClick('favorite', recipeID, userLogID, clickedButton, `favorite/${recipeID}`, 'favorite', recipeName, formattedIngredients, formattedInstructions);
+            handleButtonClick('favorite', recipeID, userLogID, clickedButton, `favorite/${recipeID}`, 'favorite', recipeName, ingredients, instructions);
         } else if (clickedButton.hasClass('bookmark-button')) {
             // Bookmark button clicked
-            handleButtonClick('saved', recipeID, userLogID, clickedButton, `saved/recipe/${recipeID}`, 'saved', recipeName, formattedIngredients, formattedInstructions);
+            handleButtonClick('saved', recipeID, userLogID, clickedButton, `saved/recipe/${recipeID}`, 'saved', recipeName, ingredients, instructions);
         }
     });
 }
 
-function handleButtonClick(className, recipeID, userLogID, button, deleteEndpoint, postEndpoint, recipeName, ingredients, instructions) {
+async function handleButtonClick(className, recipeID, userLogID, button, deleteEndpoint, postEndpoint, recipeName, ingredients, instructions) {
     if (button.hasClass(className)) {
         button.removeClass(className);
         fetch(`http://localhost:3001/${deleteEndpoint}`, {
