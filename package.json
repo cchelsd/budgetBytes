@@ -1,26 +1,27 @@
 {
   "name": "budgetbytes",
-  "type": "module",
   "version": "1.0.0",
   "description": "## Description: Budget-Bytes is a web-based chat assistant that offers personalized culinary experiences for college students. It provides effortless interaction and customized meal suggestions based on user queries and available ingredients, focusing on affordability and simplicity.",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "concurrently \"npm run client\" \"npm run server\"",
+    "client": "nodemon server.js",
+    "server": "nodemon backend/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@azure/arm-sql": "^10.0.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "mssql": "^10.0.1",
     "mysql": "^2.18.1",
     "nodemon": "^3.0.1",
-    "tedious": "^16.6.1"
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
-    "dotenv": "^16.3.1"
+    "concurrently": "^8.2.2"
   }
 }
