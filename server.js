@@ -1,7 +1,9 @@
 // Import dependencies
-const express = require('express');
+import express from 'express';
 const app = express();
-const path = require('path');
+import path from 'path';
+
+const __dirname = path.resolve();
 
 app.use(express.static(path.join(__dirname, 'public')));
 

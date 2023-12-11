@@ -401,7 +401,7 @@ header {
     font-weight: bold;
 }
 
-#aboutPage {
+#aboutPage, #groceryListPage {
     background-color: white;
 }
 
@@ -559,4 +559,69 @@ header {
 
 #returningResult li {
     margin-bottom: 5px;
+}
+
+#groceryPageTitle {
+    font-family: "Helvetica", sans-serif;
+    padding-top: 20px;
+    color: #17a2b8;
+    text-align: center;
+    /* text-shadow: 1px 1px 2px black; */
+    font-weight: normal;
+    font-size: 100px;
+    color: #1C4964;
+    margin: 20px 0 20px 0;
+}
+ 
+#mainGroceryList {
+    background-image: url("images/groceryListBackground.jpg");
+    /*width: 100%;
+    height: 1000px;
+    object-fit: contain;
+    object-position: center; */
+    max-width: 100%;
+    background-repeat:no-repeat;
+    background-size:contain;
+    background-position:center;
+    opacity: 90%;
+} 
+
+#groceryList {
+    background-color: #17a2b8;
+    float: left;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    margin-left: 30px;
+    padding: 20px;
+    box-shadow: 10px 10px 5px black;
+    justify-content: center;
+}
+
+#loginRequestText, #optionMessageOutput, #optionRequestText, 
+    #groceryEmptyStatus, #loginMessageOutput {
+    color: white;
+    text-align: center;
+    text-shadow: 1px 1px 2px black;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    font-size: 18px;
+    
+}
+
+#loginHeader {
+    color: white;
+    text-align: center;
+    text-shadow: 1px 1px 2px black;
+    font-size: 30px;
+}
+
+#loginButton {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#groceryHeader {
+    color: white;
+    text-align: center;
+    text-shadow: 1px 1px 2px black;
 }

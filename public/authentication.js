@@ -91,7 +91,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('result').innerText = 'User successfully registered.';
             } else {
                 const errorResponse = await response.json();
-                console.error(errorResponse);
                 document.getElementById('result').innerText = 'Error in registration: ' + errorResponse.error;
             }
         } catch (error) {
@@ -115,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Fetch user data from the server
     async function fetchUserData(userLogID) {
         try {
-            const response = await fetch(`http://localhost:3000/user/${userLogID}`);
+            const response = await fetch(`http://localhost:3000/user/${userLogID}`); 
             if (response.ok) {
                 const userData = await response.json();
                 displayUserData(userData);
