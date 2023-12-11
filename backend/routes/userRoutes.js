@@ -37,7 +37,7 @@ router.get('/getUsers', async (_, res) => {
   });
 
 // Get user by userLogID
-router.get('/:userLogID', async (req, res) => {
+router.get('/:userLogID', async (req, res) => { 
   try {
     const userLogID = req.params.userLogID;
     console.log(`Fetching user: ${userLogID}`);
