@@ -163,42 +163,45 @@
                 }
             }
 
-            // Calculate total score
-            const totalScore = userAnswers.reduce((acc, val) => acc + val, 0);
+            // Send the quiz results to the server using the correct endpoint
+            fetch('http://localhost:3001/quiz', {  // Update the URL to use /quiz instead of /quiz-results
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userAnswers }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
 
-            // Determine skill level based on the total score
-            let skillLevel;
-            if (totalScore <= 15) {
-                skillLevel = "Beginner";
-            } else if (totalScore <= 25) {
-                skillLevel = "Intermediate";
-            } else {
-                skillLevel = "Advanced";
-            }
+                    // Display result and interesting messages
+                    const resultContainer = document.getElementById("result-text");
+                    resultContainer.innerHTML = `${data.skillLevel}<br><br>`;
 
-            // Display result and interesting messages
-            const resultContainer = document.getElementById("result-text");
-            resultContainer.innerHTML = `${skillLevel}<br><br>`;
+                    // Add interesting messages based on skill level
+                    switch (data.skillLevel) {
+                        case "Beginner":
+                            resultContainer.innerHTML += "Welcome to the world of cooking!<br> Keep exploring and experimenting with different recipes.";
+                            break;
+                        case "Intermediate":
+                            resultContainer.innerHTML += "Fantastic job!<br> You're already an intermediate chef.<br> Continue refining your skills and trying new cuisines.";
+                            break;
+                        case "Advanced":
+                            resultContainer.innerHTML += "Wow! You're an advanced chef.<br>Your culinary skills are truly impressive.<br> Consider sharing your expertise with others!";
+                            break;
+                        default:
+                            break;
+                    }
 
-            // Add interesting messages based on skill level
-            switch (skillLevel) {
-                case "Beginner":
-                    resultContainer.innerHTML += "Welcome to the world of cooking!<br> Keep exploring and experimenting with different recipes.";
-                    break;
-                case "Intermediate":
-                    resultContainer.innerHTML += "Fantastic job!<br> You're already an intermediate chef.<br> Continue refining your skills and trying new cuisines.";
-                    break;
-                case "Advanced":
-                    resultContainer.innerHTML += "Wow! You're an advanced chef.<br>Your culinary skills are truly impressive.<br> Consider sharing your expertise with others!";
-                    break;
-                default:
-                    break;
-            }
-
-            // Display the result container
-            document.getElementById("result-container").style.display = "block";
-            // Hide the quiz form
-            document.getElementById("quiz-form").style.display = "none";
+                    // Display the result container
+                    document.getElementById("result-container").style.display = "block";
+                    // Hide the quiz form
+                    document.getElementById("quiz-form").style.display = "none";
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         }
 
         function resetQuiz() {
@@ -209,6 +212,7 @@
             document.getElementById("result-container").style.display = "none";
         }
     </script>
+
 </body>
 
 </html>

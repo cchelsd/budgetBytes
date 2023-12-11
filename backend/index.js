@@ -7,7 +7,7 @@ const userRoutes = require("./routes/userRoutes");
 const savedRoutes = require("./routes/savedRoutes");
 const historyRoutes = require("./routes/historyRoutes");
 const wordCountRoutes = require("./wordCount");
-const mealPlanRoutes = require("./mealPlan");
+const quizRoutes = require("./quizAssessment");
 const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 // var bodyParser = require('body-parser');
@@ -74,7 +74,7 @@ app.use('/user', userRoutes);
 app.use('/saved', savedRoutes);
 app.use('/history', historyRoutes);
 app.use('/search',wordCountRoutes);
-app.use('/mealplan',mealPlanRoutes);
+app.use('/quiz', quizRoutes);
 
 app.listen(3001, () => {
     console.log("Express server is running and listening");
