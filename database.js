@@ -133,7 +133,7 @@ class Database {
     return request
       .input('userLogID', sql.VarChar, userLogID)
       .input('itemName', sql.VarChar, itemName)
-      .query('DELETE FROM [budgetbytesdb].[dbo].[GroceryLists] WHERE userLogID = '+ userLogID + 'AND itemName = \'' + itemName + '\'');
+      .query('DELETE FROM [budgetbytesdb].[dbo].[GroceryLists] WHERE userLogID = '+ userLogID + 'AND itemName = ' + itemName);
   }
 
   //delete user's entire grocery list

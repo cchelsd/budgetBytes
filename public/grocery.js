@@ -241,10 +241,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json', 'userIDGroceryList' : userLogID, 'itemToDelete': itemName }
             });
-            console.log(response);
-            const resp = JSON.stringify(response);
-            if (response.ok && resp.rowsAffected > 0) {
-                console.log("handle delete's response: " + resp.rowsAffected);
+
+            //const resp = JSON.stringify(response);
+            if (response.ok) {
+                console.log("handle delete's response: " + response.rowsAffected);
                 $("#optionMessageOutput").text('Item deleted from list');
                 fetchGroceryList(userLogID);
             } else {
