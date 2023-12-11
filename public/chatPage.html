@@ -29,6 +29,15 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Locate Grocery Stores</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mealPlan.html">Meal Plan</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="wordCount.html">Recipe Search</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cookingAssessment.html">Cooking Assessment</a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Recipes</a>
                         <ul class="dropdown-menu">
@@ -49,53 +58,55 @@
     </nav>
 </header>
 
-<div class="background">
-    <!-- New User and Returning User Forms Container -->
-    <div class="user-forms-container">
-        <!-- User Type Selection -->
-        <div class="user-type-selection">
-            <button id="newUserButton">New User</button>
-            <button id="returningUserButton">Returning User</button>
+    <div class="background">
+        <!-- New User and Returning User Forms Container -->
+        <div class="user-forms-container">
+            <!-- User Type Selection -->
+            <div class="user-type-selection">
+                <button id="newUserButton">New User</button>
+                <button id="returningUserButton">Returning User</button>
+            </div>
+
+            <!-- New User Form -->
+            <div id="newUserFormContainer" class="form-container">
+                <form id="newUserForm">
+                    <h2>New User Registration</h2>
+                    <div class="form-group">
+                        <label for="userLogID">Enter your 4-digit code:</label>
+                        <input type="number" id="userLogID" name="userLogID" class="form-control" min="1000" max="9999"
+                            required>
+                        <button type="button" id="checkCodeButton">Check Code Availability</button>
+                        <div id="codeCheckResult"></div>
+                    </div>
+
+                    <h3>Dietary Preferences:</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label"><input type="checkbox" name="isVegan"> Vegan</label>
+                        <label class="checkbox-label"><input type="checkbox" name="isVegetarian"> Vegetarian</label>
+                        <label class="checkbox-label"><input type="checkbox" name="isDairyFree"> Dairy Free</label>
+                        <label class="checkbox-label"><input type="checkbox" name="isLowCarb"> Low Carb</label>
+                        <label class="checkbox-label"><input type="checkbox" name="isPescetarian"> Pescetarian</label>
+                    </div>
+
+                    <button type="submit" id="newUserSubmit" class="btn btn-primary">Submit</button>
+                    <div id="result"></div>
+                </form>
+            </div>
+
+            <!-- Returning User Form -->
+            <div id="returningUserFormContainer" class="form-container hidden">
+                <form id="returningUserForm">
+                    <h2>Returning User</h2>
+                    <div class="form-group">
+                        <label for="returningUserLogID">Enter your 4-digit code:</label>
+                        <input type="number" id="returningUserLogID" class="form-control" min="1000" max="9999"
+                            required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <div id="returningResult"></div>
+                </form>
+            </div>
         </div>
-
-        <!-- New User Form -->
-        <div id="newUserFormContainer" class="form-container">
-            <form id="newUserForm">
-            <h2>New User Registration</h2>
-                <div class="form-group">
-                    <label for="userLogID">Enter your 4-digit code:</label>
-                    <input type="number" id="userLogID" name="userLogID" class="form-control" min="1000" max="9999" required>
-                    <button type="button" id="checkCodeButton">Check Code Availability</button>
-                    <div id="codeCheckResult"></div>
-                </div>
-
-                <h3>Dietary Preferences:</h3>
-                <div class="checkbox-group">
-                    <label class="checkbox-label"><input type="checkbox" name="isVegan"> Vegan</label>
-                    <label class="checkbox-label"><input type="checkbox" name="isVegetarian"> Vegetarian</label>
-                    <label class="checkbox-label"><input type="checkbox" name="isDairyFree"> Dairy Free</label>
-                    <label class="checkbox-label"><input type="checkbox" name="isLowCarb"> Low Carb</label>
-                    <label class="checkbox-label"><input type="checkbox" name="isPescetarian"> Pescetarian</label>
-                </div>
-
-                <button type="submit" id="newUserSubmit" class="btn btn-primary">Submit</button>
-                <div id="result"></div>
-            </form>
-        </div>
-
-        <!-- Returning User Form -->
-        <div id="returningUserFormContainer" class="form-container hidden">
-            <form id="returningUserForm">
-                <h2>Returning User</h2>
-                <div class="form-group">
-                    <label for="returningUserLogID">Enter your 4-digit code:</label>
-                    <input type="number" id="returningUserLogID" class="form-control" min="1000" max="9999" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-                <div id="returningResult"></div>
-            </form>
-        </div>
-    </div>
 
         <!-- Chat Container -->
         <div class="chat-container">
@@ -109,7 +120,7 @@
 
             <div class="chat-input">
                 <input type="text" id="message" placeholder="Type your message...">
-                <button id="send">Send</button>
+                <button id="sendMessage">Send</button>
             </div>
         </div>
     </div>
@@ -118,7 +129,10 @@
     <ul class="nav justify-content-center border-bottom pb-3 mb-3">
         <li class="nav-item"><a href="landingPage.html" class="nav-link px-2 text-muted">Home</a></li>
         <li class="nav-item active"><a href="chatPage.html" class="nav-link px-2 text-muted">Chat with Budget Bytes</a></li>
-        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Locate Grocery Stores</a></li>
+        <li class="nav-item"><a href="locateStores.html" class="nav-link px-2 text-muted">Locate Grocery Stores</a></li>
+        <li class="nav-item"><a href="mealPlan.html" class="nav-link px-2 text-muted">Meal Plan</a></li>
+        <li class="nav-item"><a href="wordCount.html" class="nav-link px-2 text-muted">Word Search</a>
+        <li class="nav-item"><a href="cookingAssessment.html" class="nav-link px-2 text-muted">Cooking Assessment</a></li>
         <li class="nav-item"><a href="aboutPage.html" class="nav-link px-2 text-muted">About</a></li>
     </ul>
     <p class="text-center text-muted">© 2023 Budget Bytes</p>

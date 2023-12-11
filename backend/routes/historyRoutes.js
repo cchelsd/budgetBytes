@@ -45,13 +45,32 @@ router.get('/all', async (request, response) => {
     });
 });
 
+//updated it to prevent the JSON.parse from failing when the recipe field is not a valid JSON string
 function parseRecipeJSON(data) {
-    return data.recordsets.map(recordset =>
-        recordset.map(item => ({
-        ...item,
-        recipe: JSON.parse(item.recipe)
-        }))
-    );
+    try {
+        return data.recordsets.map(recordset =>
+            recordset
+                .filter(item => isValidJSON(item.recipe))
+                .map(item => ({
+                    ...item,
+                    recipe: JSON.parse(item.recipe)
+                }))
+        );
+    } catch (error) {
+        console.error('Error parsing JSON:', error);
+        console.log('Data:', data);
+        return [];
+    }
+}
+
+// Helper function to check if a string is a valid JSON
+function isValidJSON(str) {
+    try {
+        JSON.parse(str);
+        return true;
+    } catch (e) {
+        return false;
+    }
 }
 
 module.exports = router;

@@ -91,7 +91,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('result').innerText = 'User successfully registered.';
             } else {
                 const errorResponse = await response.json();
-                console.error(errorResponse);
                 document.getElementById('result').innerText = 'Error in registration: ' + errorResponse.error;
             }
         } catch (error) {

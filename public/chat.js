@@ -55,6 +55,11 @@ $(document).ready(function () {
                     message.val('');
                 }
                 console.log(responseData);
+                // if response is successful, append the list and show the result from ChatGPT
+                $('#message').css("border", "1px solid #f4f5f9");
+                $('#conversation').append("<li class='message-left'><div class='message-hour'>" + d + " <span class='ion-android-done-all'></span></div><div class='message-avatar'><div class='avatar ion-ios-person .bot'><img src='images/logo.png' alt='chatGPT avatar' id='chatGPTAvatar'></div><div class='name'>chatGPT</div></div><div class='message-text'>" + responseData + "</div></li>");
+                
+                $('#message').val('');
             }).catch(function (reason) {
                 console.log(reason);
             });
