@@ -1,7 +1,14 @@
 body {
     font-family: 'Arial', sans-serif;
     background-color: #f4f5f9;
-    overflow-x: hidden
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+footer {
+    clear: left;
 }
 
 a {
@@ -13,28 +20,28 @@ p {
     line-height: 1.2;
 }
 
+.logIn, .startDiv {
+    margin-bottom: 35%;
+}
+
 /* ---------------------- Header styling ---------------------- */
-header {
+/* header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: rgba(255, 255, 255, 0.8);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+} */
 
 #webAppName {
     margin-left: 50px;
 }
 
 .navbar {
-    margin-right: 50px;
+    background-color: white!important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.navbar-expand-lg .navbar-collapse {
-    display: flex!important;
-    justify-content: space-around;
-    flex-basis: auto;
-}
 
 #logo {
     width: 80px;
@@ -488,13 +495,50 @@ header {
     stroke: none;
 }
 
-.recipes {
-    display: block;
+.recipes h1, .recipes h4 {
     text-align: center;
+    padding-top: 20px;
+}
+
+.modal-body h4 {
+    padding-top: 0;
+}
+
+#createCollectionBtn {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+#collectionsMenu {
+    width: 20%;
+    float: left;
+    margin-right: 50px;
+    margin-left: 20px;
+}
+
+.nav h4 {
+    text-align: left;
+}
+
+.collOpt {
+    margin-top: 15px;
+}
+
+.mainDoc {
+    width: 70%;
+    float: left;
+}
+
+.recipeCards {
+    display: block;
     width: 88%;
     margin: auto;
 }
-  
+
+.recipeCards h5 {
+    text-align: center;
+}
+
 .recipe-card {
     position: relative;
     background-color: white;
@@ -514,11 +558,8 @@ header {
     cursor: pointer;
 }
 
-.recipe-card li {
-    text-align: left;
-}
-
 /* ---------------------- saved recipes ---------------------- */
+
 .bookmark-button {
     position: absolute;
     top: 8px;
