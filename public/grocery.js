@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     $("#addButton").on("click", function(e) {
         e.preventDefault();
-
         selectedOption = 'add';
 
         //hide other elements that could potentially be visible
@@ -27,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     $("#updateButton").on("click", function(e) {
         e.preventDefault();
-
         selectedOption = 'update';
 
         //hide other elements that could potentially be visible
@@ -43,7 +41,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     $("#deleteItemButton").on("click", function(e) {
         e.preventDefault();
-
         selectedOption = 'deleteItem';
 
         //hide other elements that could potentially be visible
@@ -60,6 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
     //this syntax ensures that a window.confirm alert does not appear twice
     $("#deleteListButton").off("click").on("click", function(e) {
         e.preventDefault();
+        $(".crudInput").hide();
 
         if (window.confirm("delete entire grocery list?")) {
             //delete list
@@ -84,18 +82,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     //this syntax ensures that an alert does not appear twice
     $("#listChoice").off("click").on("click", function(e) {
-        if (selectedOption === 'add') {
+        if (selectedOption === 'add' && $("#addNameInput").val() && $("#addQuantityInput").val()) {
             handleAddingItemToList(e);
-        } else if (selectedOption === 'update') {
+        } else if (selectedOption === 'update' && $("#updateNameInput").val() && $("#updateQuantityInput").val()) {
             handleUpdatingListItem(e);
-        } else if (selectedOption === 'deleteItem') {
+        } else if (selectedOption === 'deleteItem' && $("#deleteNameInput").val()) {
             console.log("selected option matched to delete item");
             handleDeletingListItem(e);
         } else if (selectedOption === 'deleteList') {
             console.log("selected option matched to delete list");
             handleDeletingList(e);
         } else {
-            alert("Please select one of the four options to continue.");
+            alert("Please select one of the four options and fill out ALL the required information to continue.");
         }
     });
 
@@ -243,8 +241,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json', 'userIDGroceryList' : userLogID, 'itemToDelete': itemName }
             });
-
-            if (response.ok) {
+            console.log(response);
+            const resp = JSON.stringify(response);
+            if (response.ok && resp.rowsAffected > 0) {
+                console.log("handle delete's response: " + resp.rowsAffected);
                 $("#optionMessageOutput").text('Item deleted from list');
                 fetchGroceryList(userLogID);
             } else {
@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             if (response.ok) {
                 $("#optionMessageOutput").text('List deleted');
-                fetchGroceryList(userLogID);
+                $('ul').empty();
             } else {
                 const errorResponse = await response.json();
                 $("#optionMessageOutput").text('Error deleting list - - ' + errorResponse.error);

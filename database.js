@@ -130,14 +130,13 @@ class Database {
   async deleteGroceryListItem(userLogID, itemName) {
     await this.connect();
     const request = this.poolConnection.request();
-    console.log("got to database delete");
     return request
       .input('userLogID', sql.VarChar, userLogID)
       .input('itemName', sql.VarChar, itemName)
-      .query('DELETE FROM [budgetbytesdb].[dbo].[GroceryLists] WHERE userLogID = @userLogID AND itemName = @itemName');
+      .query('DELETE FROM [budgetbytesdb].[dbo].[GroceryLists] WHERE userLogID = '+ userLogID + 'AND itemName = \'' + itemName + '\'');
   }
 
-  //delete entire list
+  //delete user's entire grocery list
   async deleteGroceryList(userLogID) {
     await this.connect();
     const request = this.poolConnection.request();
