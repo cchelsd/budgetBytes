@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             // Send a POST request to the server to register the new user
-            const response = await fetch('http://localhost:3000/user/', {
+            const response = await fetch('http://localhost:3001/user/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(userData)
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Fetch user data from the server
     async function fetchUserData(userLogID) {
         try {
-            const response = await fetch(`http://localhost:3000/user/${userLogID}`); 
+            const response = await fetch(`http://localhost:3001/user/${userLogID}`);
             if (response.ok) {
                 const userData = await response.json();
                 displayUserData(userData);
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to check if userLogID is available
     async function checkUserLogIDAvailability(userLogID) {
         try {
-            const response = await fetch(`http://localhost:3000/user/${userLogID}`);
+            const response = await fetch(`http://localhost:3001/user/${userLogID}`);
             const data = await response.json();
             if (data.recordsets && data.recordsets[0].length === 0) {
                 newUserSubmitButton.disabled = false; // Enable the submit button

@@ -1,87 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Chat with Budget Bytes</title>
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="styles.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="chat.js"></script> <!-- Add this line -->
     <script src="authentication.js"></script>
 </head>
+
 <body>
 
-<header>
-    <div id="webAppName">
-        <a href="landingPage.html">
-            <img src="images/logo.png" alt="Budget Bytes Logo" id="logo"/>
-            <img src="images/name.png" alt="Budget Bytes" id="name"/>
-        </a>
-    </div>
+    <header>
+        <div id="webAppName">
+            <a href="landingPage.html">
+                <img src="images/logo.png" alt="Budget Bytes Logo" id="logo" />
+                <img src="images/name.png" alt="Budget Bytes" id="name" />
+            </a>
+        </div>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-white">
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-item nav-link" href="landingPage.html">Home</a> <!-- landing page -->
-                <a class="nav-item nav-link active" href="chatPage.html">Chat with Budget Bytes</a> <!-- <span class="sr-only">(current)</span>-->
-                <a class="nav-item nav-link" href="#">Locate Grocery Stores</a>
-                <a class="nav-item nav-link" href="groceryList.html">Grocery List</a>
-                <a class="nav-item nav-link" href="aboutPage.html">About</a>
+        <nav class="navbar navbar-expand-lg navbar-light bg-white">
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="landingPage.html">Home</a> <!-- landing page -->
+                    <a class="nav-item nav-link active" href="chatPage.html">Chat with Budget Bytes</a>
+                    <!-- <span class="sr-only">(current)</span>-->
+                    <a class="nav-item nav-link" href="locateStores.html">Locate Stores</a>
+                    <a class="nav-item nav-link" href="mealPlan.html">Meal Plan</a>
+                    <a class="nav-item nav-link" href="wordCount.html">Word Search</a>
+                    <a class="nav-item nav-link" href="cookingAssessment.html">Cooking Assessment</a>
+                    <a class="nav-item nav-link" href="favoriteRecipesPage.html">Favorite Recipes</a>
+                    <a class="nav-item nav-link" href="aboutPage.html">About</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="background">
+        <!-- New User and Returning User Forms Container -->
+        <div class="user-forms-container">
+            <!-- User Type Selection -->
+            <div class="user-type-selection">
+                <button id="newUserButton">New User</button>
+                <button id="returningUserButton">Returning User</button>
+            </div>
+
+            <!-- New User Form -->
+            <div id="newUserFormContainer" class="form-container">
+                <form id="newUserForm">
+                    <h2>New User Registration</h2>
+                    <div class="form-group">
+                        <label for="userLogID">Enter your 4-digit code:</label>
+                        <input type="number" id="userLogID" name="userLogID" class="form-control" min="1000" max="9999"
+                            required>
+                        <button type="button" id="checkCodeButton">Check Code Availability</button>
+                        <div id="codeCheckResult"></div>
+                    </div>
+
+                    <h3>Dietary Preferences:</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label"><input type="checkbox" name="isVegan"> Vegan</label>
+                        <label class="checkbox-label"><input type="checkbox" name="isVegetarian"> Vegetarian</label>
+                        <label class="checkbox-label"><input type="checkbox" name="isDairyFree"> Dairy Free</label>
+                        <label class="checkbox-label"><input type="checkbox" name="isLowCarb"> Low Carb</label>
+                        <label class="checkbox-label"><input type="checkbox" name="isPescetarian"> Pescetarian</label>
+                    </div>
+
+                    <button type="submit" id="newUserSubmit" class="btn btn-primary">Submit</button>
+                    <div id="result"></div>
+                </form>
+            </div>
+
+            <!-- Returning User Form -->
+            <div id="returningUserFormContainer" class="form-container hidden">
+                <form id="returningUserForm">
+                    <h2>Returning User</h2>
+                    <div class="form-group">
+                        <label for="returningUserLogID">Enter your 4-digit code:</label>
+                        <input type="number" id="returningUserLogID" class="form-control" min="1000" max="9999"
+                            required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <div id="returningResult"></div>
+                </form>
             </div>
         </div>
-    </nav>
-
-</header>
-
- 
-
-<div class="background">
-    <!-- New User and Returning User Forms Container -->
-    <div class="user-forms-container">
-        <!-- User Type Selection -->
-        <div class="user-type-selection">
-            <button id="newUserButton">New User</button>
-            <button id="returningUserButton">Returning User</button>
-        </div>
-
-        <!-- New User Form -->
-        <div id="newUserFormContainer" class="form-container">
-            <form id="newUserForm">
-            <h2>New User Registration</h2>
-                <div class="form-group">
-                    <label for="userLogID">Enter your 4-digit code:</label>
-                    <input type="number" id="userLogID" name="userLogID" class="form-control" min="1000" max="9999" required>
-                    <button type="button" id="checkCodeButton">Check Code Availability</button>
-                    <div id="codeCheckResult"></div>
-                </div>
-
-                <h3>Dietary Preferences:</h3>
-                <div class="checkbox-group">
-                    <label class="checkbox-label"><input type="checkbox" name="isVegan"> Vegan</label>
-                    <label class="checkbox-label"><input type="checkbox" name="isVegetarian"> Vegetarian</label>
-                    <label class="checkbox-label"><input type="checkbox" name="isDairyFree"> Dairy Free</label>
-                    <label class="checkbox-label"><input type="checkbox" name="isLowCarb"> Low Carb</label>
-                    <label class="checkbox-label"><input type="checkbox" name="isPescetarian"> Pescetarian</label>
-                </div>
-
-                <button type="submit" id="newUserSubmit" class="btn btn-primary">Submit</button>
-                <div id="result"></div>
-            </form>
-        </div>
-
-        <!-- Returning User Form -->
-        <div id="returningUserFormContainer" class="form-container hidden">
-            <form id="returningUserForm">
-                <h2>Returning User</h2>
-                <div class="form-group">
-                    <label for="returningUserLogID">Enter your 4-digit code:</label>
-                    <input type="number" id="returningUserLogID" class="form-control" min="1000" max="9999" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-                <div id="returningResult"></div>
-            </form>
-        </div>
-    </div>
 
         <!-- Chat Container -->
         <div class="chat-container">
@@ -100,21 +106,32 @@
         </div>
     </div>
 
-<footer class="py-3 my-2">
-    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-        <li class="nav-item"><a href="landingPage.html" class="nav-link px-2 text-muted">Home</a></li>
-        <li class="nav-item"><a href="chatPage.html" class="nav-link px-2 text-muted">Chat with Budget Bytes</a></li>
-        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Locate Grocery Stores</a></li>
-        <li class="nav-item"><a href="groceryList.html" class="nav-link px-2 text-muted">Grocery List</a></li>
-        <li class="nav-item"><a href="aboutPage.html" class="nav-link px-2 text-muted">About</a></li>
-    </ul>
-    <p class="text-center text-muted">© 2023 Budget Bytes</p>
-</footer>
-
-<script src="authentication.js"></script>
-<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <footer class="py-3 my-2">
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+            <li class="nav-item"><a href="landingPage.html" class="nav-link px-2 text-muted">Home</a></li>
+            <li class="nav-item active"><a href="chatPage.html" class="nav-link px-2 text-muted">Chat with Budget
+                    Bytes</a></li>
+            <li class="nav-item"><a href="locateStores.html" class="nav-link px-2 text-muted">Locate Stores</a></li>
+            <li class="nav-item"><a href="mealPlan.html" class="nav-link px-2 text-muted">Meal Plan</a></li>
+            <li class="nav-item"><a href="wordCount.html" class="nav-link px-2 text-muted">Word Search</a>
+            </li>
+            <li class="nav-item"><a href="cookingAssessment.html" class="nav-link px-2 text-muted">Cooking
+                    Assessment</a></li>
+            <li class="nav-item"><a href="aboutPage.html" class="nav-link px-2 text-muted">About</a></li>
+        </ul>
+        <p class="text-center text-muted">© 2023 Budget Bytes</p>
+    </footer>
+    <script src="authentication.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 </body>
+
 </html>
