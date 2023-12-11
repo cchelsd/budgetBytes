@@ -20,9 +20,14 @@ async function fetchUserHistory(userID) {
 }
 
 async function displayRecipeCards(userID) {
-    $(".logIn").empty();
+    $("#msgContainer").empty();
     const recipes = await fetchUserHistory(userID);
-    console.log(recipes);
+    if (recipes.length == 0) {
+        const msgDiv = $("<div>", {class: "startDiv"});
+        const message = $("<h5>", {class: "startMsg"}).text("Begin chatting with Budget Bytes to explore your recipe history!");
+        msgDiv.append(message);
+        $('.recipeCards').append(msgDiv);
+    }
     recipes.forEach(recipe => {
         const recipeCard = $("<div>").addClass("recipe-card")
         const recipeDetails = $("<div>").addClass("recipe-details");
@@ -31,13 +36,12 @@ async function displayRecipeCards(userID) {
         const ingredientsList = $('<div>').append('<p>').html(recipe.recipe.ingredients);
         const ingredientItems = ingredientsList.find('li');
 
-
         // Extract and append ingredients to the final ingredients list
-        // const finalIngredientsList = $('<ul>');
-        // ingredientItems.each(function() {
-        //     const ingredient = $('<li>').text($(this).text());
-        //     finalIngredientsList.append(ingredient);
-        // });
+        const finalIngredientsList = $('<ul>');
+        ingredientItems.each(function() {
+            const ingredient = $('<li>').text($(this).text());
+            finalIngredientsList.append(ingredient);
+        });
 
         // Parse HTML content for instructions
         const instructionsList = $('<ol>').html(recipe.recipe.instructions);
@@ -49,6 +53,8 @@ async function displayRecipeCards(userID) {
             const instruction = $('<li>').text($(this).text());
             finalInstructionsList.append(instruction);
         });
+
+        console.log(recipe.recipe.name);
 
         // Add recipe name, ingredients list, and instructions list to recipe details
         recipeDetails.append(`<p>${recipe.recipe.name}</p>`);
@@ -62,8 +68,9 @@ async function displayRecipeCards(userID) {
         // Append the created recipe details to the card
         recipeCard.on("click", () => handleRecipeSelection(recipeCard));
         recipeCard.append(recipeDetails);
-        $('.recipes').append(recipeCard);
+        $('.recipeCards').append(recipeCard);
     });
+    $('<h1>Recipe History</h1>').insertBefore($('.recipeCards'));
 }
 
  /**

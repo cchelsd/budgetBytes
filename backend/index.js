@@ -7,6 +7,8 @@ const userRoutes = require("./routes/userRoutes");
 const savedRoutes = require("./routes/savedRoutes");
 const historyRoutes = require("./routes/historyRoutes");
 
+const port = 3001;
+
 // var bodyParser = require('body-parser');
 
 // // ----------------------------------------------
@@ -39,6 +41,6 @@ app.use('/user', userRoutes);
 app.use('/saved', savedRoutes);
 app.use('/history', historyRoutes);
 
-app.listen(3001, () => {
-    console.log("Express server is running and listening");
+app.listen(port, () => {
+    console.log(`Express server is running and listening on port ${port}`);
 }); 
