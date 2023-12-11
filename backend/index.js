@@ -6,6 +6,7 @@ const favoriteRoutes = require("./routes/favoriteRoutes");
 const userRoutes = require("./routes/userRoutes");
 const savedRoutes = require("./routes/savedRoutes");
 const historyRoutes = require("./routes/historyRoutes");
+const exploreRoutes = require("./routes/exploreRoutes");
 
 const port = 3001;
 
@@ -37,9 +38,10 @@ app.use(cors());
 // // The routes are prefixed with '/attractions'
 // // ----------------------------------------------
 app.use('/favorite', favoriteRoutes);
-app.use('/user', userRoutes);
+app.use('/user', userRoutes);  
 app.use('/saved', savedRoutes);
 app.use('/history', historyRoutes);
+app.use('/explore', exploreRoutes);
 
 app.listen(port, () => {
     console.log(`Express server is running and listening on port ${port}`);

@@ -228,6 +228,9 @@ p {
     overflow: hidden;
 }
 
+
+
+
 #recipeIdeas {
     list-style-type: none;
     padding-left: 0;
@@ -463,12 +466,17 @@ p {
 
 /* ---------------------- favorite recipes ---------------------- */
 .heart-button {
-    position: absolute;
+    /* position: absolute;
     top: 5px;
-    right: 0;
+    right: 0; */
+    position: relative;
+    float: right; /* Align buttons to the right */
+    z-index: 1; /* Ensures the buttons are above other elements */
     background: none;
     border: none;
-    margin-left: 20px;
+    margin-left: 15px;
+    margin-right: 8px;
+    margin-top: -2px;
 }
 
 .heart-icon {
@@ -561,11 +569,13 @@ p {
 /* ---------------------- saved recipes ---------------------- */
 
 .bookmark-button {
-    position: absolute;
+    /* position: absolute;
     top: 8px;
-    right: 50px;
+    right: 50px; */
     /* position: relative; */
-    margin-right: 0;
+    position: relative;
+    float: right; /* Align buttons to the right */
+    z-index: 1; /* Ensures the buttons are above other elements */
     background: none;
     border: none;
 }
