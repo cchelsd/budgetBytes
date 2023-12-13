@@ -20,29 +20,26 @@
                     </a>
                     <div class="collapse navbar-collapse" id="navbarNavDropdown">
                         <ul class="navbar-nav ms-auto">
-                            <li class="nav-item">
-                                <a class="nav-link" href="landingPage.html">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="chatPage.html">Chat with Budget Bytes</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Locate Grocery Stores</a>
-                            </li>
+                            <li class="nav-item"><a class="nav-link" href="landingPage.html">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="chatPage.html">Chat with Budget Bytes</a></li>
+                            <li class="nav-item"><a class="nav-link" href="locateStores.html">Locate Grocery Stores</a></li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Recipes</a>
                                 <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="favoriteRecipesPage.html">Favorite Recipes</a></li>
-                                <li><a class="dropdown-item" href="savedRecipesPage.html">Saved Recipes</a></li>
-                                <li><a class="dropdown-item" href="recipeHistoryPage.html">Recipe History</a></li>
+                                    <!-- <li class=>Your recipes</li> -->
+                                    <li><a class="dropdown-item disabled" aria-disabled="true">Your Recipes</a></li>
+                                    <li><a class="dropdown-item" href="favoriteRecipesPage.html">Favorite Recipes</a></li>
+                                    <li><a class="dropdown-item" href="savedRecipesPage.html">Saved Recipes</a></li>
+                                    <li><a class="dropdown-item" href="recipeHistoryPage.html">Recipe History</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item active" href="exploreRecipesPage.html">Explore Other Recipes</a></li>
+                                    <li><a class="dropdown-item" href="wordCount.html">Recipe Search</a></li>
                                 </ul>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="exploreRecipesPage.html">Explore Recipes</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="aboutPage.html">About</a>
-                            </li>
+                            <li class="nav-item"><a class="nav-link" href="mealPlanPage.html">Meal Plan</a></li>
+                            <li class="nav-item"><a class="nav-link" href="groceryList.html">Grocery List</a></li>
+                            <li class="nav-item"><a class="nav-link" href="cookingAssessment.html">Cooking Assessment</a></li>
+                            <li class="nav-item"><a class="nav-link" href="aboutPage.html">About</a></li>
                         </ul>
                     </div>
                 </div>
@@ -51,10 +48,10 @@
 
         <main class="recipes">
             <h1>Explore Recipes</h1>
-            <div id="msgContainer">
-                <h4>Log in to see a curated list of recipes based on your dietary preferences.</h4>
-            </div>
-            <section class="recipeCards"></section>
+            <div id="msgContainer"></div>
+            <div id="exploreMenu"></div>
+
+            <div class="mainDoc tab-content" id="myTabContent"></div>
 
             <!-- Modal for displaying detailed recipe information -->
             <div class="modal fade" id="recipeModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="recipeModalLabel" aria-hidden="true">
@@ -74,7 +71,9 @@
                             <p id="recipeInstructions"></p>
                         </div>
                         <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <div id="addedMsg"></div>
+                            <div id="addCont"></div>
+                            <button type="button" id="closeButton" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>

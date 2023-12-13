@@ -38,9 +38,9 @@ const dbConnection = require('./config');
 //     }
 //   }
 
-  async function createUser(user) {
+async function createUser(user) {
     // await this.connect();
-    const { userLogID, isVegan, isVegetarian, isDairyFree, isLowCarb, isPescetarian } = user;
+  const { userLogID, isVegan, isVegetarian, isDairyFree, isLowCarb, isPescetarian } = user;
     const request = dbConnection.request();
     return request
       .input('userLogID', sql.VarChar, userLogID)
@@ -50,7 +50,7 @@ const dbConnection = require('./config');
       .input('isLowCarb', sql.VarChar, isLowCarb)
       .input('isPescetarian', sql.VarChar, isPescetarian)
       .query('INSERT INTO BudgetBytesTable (userLogID, isVegan, isVegetarian, isDairyFree, isLowCarb, isPescetarian) VALUES (@userLogID, @isVegan, @isVegetarian, @isDairyFree, @isLowCarb, @isPescetarian)');
-  }
+}
 
   async function readAll() {
     // await this.connect();
@@ -83,12 +83,16 @@ const dbConnection = require('./config');
   async function deleteUser(userLogID) {
     // await this.connect();
     const request = dbConnection.request();
+    const query = `
+      DELETE FROM BudgetBytesTable WHERE userLogID = @userLogID;
+      DELETE FROM favorites WHERE userLogID = @userLogID;
+      DELETE FROM savedRecipes WHERE userLogID = @userLogID;
+      DELETE FROM recipeHistory WHERE userLogID = @userLogID;
+    `;
     return request
       .input('userLogID', sql.VarChar, userLogID)
-      .query('DELETE FROM BudgetBytesTable WHERE userLogID = @userLogID');
+      .query(query);
   }
-// }
-
 // export default Database;
 module.exports = {
     createUser,

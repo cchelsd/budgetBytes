@@ -110,6 +110,8 @@ async function displayRecipeCards(userID, collection, allRecipes) {
             const recipeCard = $("<div>").addClass("recipe-card")
             const recipeDetails = $("<div>").addClass("recipe-details");
         
+            console.log("Recipe", recipe);
+            console.log("Recipe recipe", recipe.recipe);
             // Parse HTML content for ingredients
             const ingredientsList = $('<ul>').html(recipe.recipe.ingredients);
             const ingredientItems = ingredientsList.find('li');
@@ -164,6 +166,7 @@ async function displayCollections(userID) {
     allTab.append(allLink);
     items.append(allTab);
 
+    console.log(collections);
     const collectionNames = collections.map(collection => collection['']);
     const allRecipes = await fetchUserSaves(userID);
     collectionNames.forEach(async collection => {

@@ -55,11 +55,6 @@ $(document).ready(function () {
                     message.val('');
                 }
                 console.log(responseData);
-                // if response is successful, append the list and show the result from ChatGPT
-                $('#message').css("border", "1px solid #f4f5f9");
-                $('#conversation').append("<li class='message-left'><div class='message-hour'>" + d + " <span class='ion-android-done-all'></span></div><div class='message-avatar'><div class='avatar ion-ios-person .bot'><img src='images/logo.png' alt='chatGPT avatar' id='chatGPTAvatar'></div><div class='name'>chatGPT</div></div><div class='message-text'>" + responseData + "</div></li>");
-                
-                $('#message').val('');
             }).catch(function (reason) {
                 console.log(reason);
             });
@@ -259,7 +254,7 @@ function displayRecipe(recipeDetails, d, recipeID) {
     if (instructions.length > 0 && instructions[0].toLowerCase().includes('instructions' || 'directions')) {
         instructions.shift();
     }
-    
+
     console.log("Ingredients", ingredients);
     console.log("Instructions", instructions);
     const savedRecipeID = recipeID;
@@ -303,14 +298,6 @@ function displayRecipe(recipeDetails, d, recipeID) {
                     </li>`
     // Display the formatted recipe details
     $('#conversation').append(message);
-    // $('#conversation').append("<li class='message-left'><div class='message-hour'>" + d + " <span class='ion-android-done-all'></span></div>" +
-    //     "<div class='message-avatar'><div class='avatar ion-ios-person .bot'><img src='images/logo.png' alt='chatGPT avatar' id='chatGPTAvatar'></div>" +
-    //     "<div class='name'>chatGPT</div></div><div class='message-text'><div class='save-button'><button id='" + savedRecipeID + "' class='bookmark-button'>" +
-    //     "<svg class='bookmark-icon' viewBox='0 0 24 24'><path class='bookmark-shape' d='M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 " +
-    //     "15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2'></path></svg></button></div><div class='favorite-button'><button id='" + recipeID + "' class='heart-button'>" +
-    //     "<svg class='heart-icon' viewBox='0 0 24 24'><path class='heart-shape' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 " +
-    //     "3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'></path></svg></button></div><p>" + recipeName + "</p>" +
-    //     "<h4>Recipe Details</h4><p>Ingredients:</p><ul>" + ingredients.join('') + "</ul><p>Instructions:</p><ol>" + instructions.join('') + "</ol></div></li>");
     $('#message').val('');
 
 
@@ -321,7 +308,7 @@ function displayRecipe(recipeDetails, d, recipeID) {
         let userLogID = getCurrentUserID();
         console.log(clickedButton);
 
-        if (userLogID == "") {
+        if (userLogID === "") {
             alert("Please log in or create an account to save or favorite a recipe");
             return;
         }
@@ -380,6 +367,7 @@ async function handleButtonClick(className, recipeID, userLogID, button, deleteE
 }
 
 async function addToHistory(recipeID, userLogID, recipeName, ingredients, instructions) {
+    console.log(JSON.stringify({ id: recipeID, recipe: JSON.stringify({name: recipeName, ingredients: ingredients, instructions: instructions})}));
     try {
         const response = await fetch(`http://localhost:3001/history`, {
             method : 'POST',
@@ -396,3 +384,7 @@ async function addToHistory(recipeID, userLogID, recipeName, ingredients, instru
         console.log('Error:', error);
     }
 }
+
+window.addEventListener('unload', function (event) {
+    localStorage.setItem('currentUserLogID', "");
+});
