@@ -33,7 +33,7 @@ $(document).ready(function () {
                 }
 
                 // Check for potential recipe details
-                if ((responseData.includes("Ingredients") || responseData.includes("Instructions")) && !responseData.includes("ideas")) {
+                if ((responseData.includes("Ingredients") || responseData.includes("Instructions")) || responseData.includes("Directions") && !responseData.includes("ideas")) {
                     // Display the individual recipe details in a structured format
                     let recipeId = new Date().getTime(); // generate unique recipe id
                     displayRecipe(responseData, d, recipeId);
@@ -99,6 +99,7 @@ async function getUserDietaryMessage() {
     console.log("Current User ID:", currentUserID);
 
     let dietaryMessage = "";
+    let skillMessage = "";
 
     if (currentUserID) {
         const userPrefs = await fetchUserDietaryPreferences(currentUserID);
@@ -119,10 +120,22 @@ async function getUserDietaryMessage() {
            if (userPrefs.isPescetarian === 'true') {
                dietaryMessage += "It is important that you must only give the user Pescetarian Recipe suggestions. You must give pescetarian-version of recipes unless the user specifically says something like 'Give me non-pescetarian recipes'...";
            }
+           if (userPrefs.skillLevel === 'Beginner') {
+                skillMessage += "It is important that you must only give the user beginner-level recipe suggestions. You must give beginner-level recipes unless the user specifically says something like 'Give me advanced level recipes'...";
+           }
+           if (userPrefs.skillLevel === 'Intermediate') {
+                skillMessage += "It is important that you must only give the user intermediate-level recipe suggestions. You must give intermediate-level recipes unless the user specifically says something like 'Give me beginner level recipes'...";
+            }
+            if (userPrefs.skillLevel === 'Advanced') {
+                skillMessage += "It is important that you must only give the user advanced-level recipe suggestions. You must give advanced-level recipes unless the user specifically says something like 'Give me intermediate level recipes'...";
+            }
        }
     }
 
-    return dietaryMessage;
+    const finalMessage = dietaryMessage + skillMessage;
+    console.log(finalMessage);
+
+    return finalMessage;
 }
 
 
@@ -198,38 +211,99 @@ function openAPIConnect(userText) {
 }
 
 function displayRecipe(recipeDetails, d, recipeID) {
-    // Split the recipe details into sections
-    var sections = recipeDetails.split(/Ingredients:|Instructions:/);
-    console.log(sections);
-    var recipeName = sections[0].trim();
-    var ingredients = sections[1].trim();
-    var instructions = sections[2].trim();
-    var savedRecipeID = recipeID;
-    var userLogID = getCurrentUserID();
+    const lines = recipeDetails.split('\n');
+
+    let ingredients = [];
+    let instructions = [];
+    let isInstructions = false;
+    let recipeName = '';
+
+    const ingredientsIndex = recipeDetails.toLowerCase().indexOf('ingredients:');
+    const dashIndex = recipeDetails.indexOf('-');
+
+    if (ingredientsIndex !== -1) {
+        recipeName = recipeDetails.substring(0, ingredientsIndex).trim();
+    } else if (dashIndex !== -1) {
+        // Checking if the character after the dash is a space or the dash is at the start of the string
+        if (recipeDetails[dashIndex + 1] === ' ' || dashIndex === 0) {
+            recipeName = recipeDetails.substring(0, dashIndex).trim();
+        }
+    } else {
+        // If neither 'Ingredients:' nor '-' found, take the first line as the recipe name
+        const lines = recipeDetails.split('\n');
+        recipeName = lines[0].trim();
+    }
+
+    lines.forEach(line => {
+        line = line.trim();
+
+        if (line.startsWith('Instructions:') || line.startsWith('Directions:')) {
+            isInstructions = true;
+        } else if (line.startsWith('-')) {
+            isInstructions = false;
+        }
+
+        if (isInstructions) {
+            if (line !== "") {
+                instructions.push('<li>' + line.replace(/^\d+\.\s/,'') + '</li>');
+            }
+        } else {
+            if (line.trim().startsWith('-')) {
+                ingredients.push('<li>' + line.trim().substring(1) + '</li>');
+            }
+        }
+    });
+
+    // Remove 'Ingredients' and 'Instructions' if present
+    if (ingredients.length > 0 && ingredients[0].toLowerCase().includes('ingredients')) {
+        ingredients.shift();
+    }
+
+    if (instructions.length > 0 && instructions[0].toLowerCase().includes('instructions' || 'directions')) {
+        instructions.shift();
+    }
+    
+    const savedRecipeID = recipeID;
+    const userLogID = getCurrentUserID();
 
     if (userLogID !== "") {
         addToHistory(recipeID, userLogID, recipeName, ingredients, instructions);
     }
-    
-    // Format ingredients section
-    var formattedIngredients = ingredients.split(/\n/)
-        .filter(item => item.trim() !== "") // Remove empty lines
-        .map(item => "<li>" + item.replace(/^- /, '') + "</li>") // Remove the leading dash and add <li> tags
-        .join("");
-
-    // Format instructions section
-    var formattedInstructions = instructions.split(/\d+\./).filter(step => step.trim() !== "").map(step => "<li>" + step.trim() + "</li>").join("");
 
     $('#message').css("border", "1px solid #f4f5f9");
+    const message = `<li class='message-left'>
+                        <div class='message-hour'>${d} <span class='ion-android-done-all'></span></div>
+                        <div class='message-avatar'>
+                            <div class='avatar ion-ios-person .bot'>
+                                <img src='images/logo.png' alt='chatGPT avatar' id='chatGPTAvatar'>
+                            </div>
+                            <div class='name'>chatGPT</div>
+                        </div>
+                        <div class='message-text'>
+                            <div class='save-button'>
+                                <button id='${savedRecipeID}' class='bookmark-button'>
+                                    <svg class='bookmark-icon' viewBox='0 0 24 24'>
+                                        <path class='bookmark-shape' d='M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2'>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class='favorite-button'>
+                                <button id='${recipeID}' class='heart-button'>
+                                    <svg class='heart-icon' viewBox='0 0 24 24'>
+                                        <path class='heart-shape' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'>
+                                    </svg>
+                                </button>
+                            </div>
+                            <p>${recipeName}</p>
+                            <h4>Recipe Details</h4>
+                            <p>Ingredients:</p>
+                            <ul>${ingredients.join('')}</ul>
+                            <p>Instructions:</p>
+                            <ol>${instructions.join('')}</ol>
+                        </div>
+                    </li>`
     // Display the formatted recipe details
-    $('#conversation').append("<li class='message-left'><div class='message-hour'>" + d + " <span class='ion-android-done-all'></span></div>" +
-        "<div class='message-avatar'><div class='avatar ion-ios-person .bot'><img src='images/logo.png' alt='chatGPT avatar' id='chatGPTAvatar'></div>" +
-        "<div class='name'>chatGPT</div></div><div class='message-text'><div class='save-button'><button id='" + savedRecipeID + "' class='bookmark-button'>" +
-        "<svg class='bookmark-icon' viewBox='0 0 24 24'><path class='bookmark-shape' d='M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 " +
-        "15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2'></path></svg></button></div><div class='favorite-button'><button id='" + recipeID + "' class='heart-button'>" +
-        "<svg class='heart-icon' viewBox='0 0 24 24'><path class='heart-shape' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 " +
-        "3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'></path></svg></button></div><p>" + recipeName + "</p>" +
-        "<h4>Recipe Details</h4><p>Ingredients:</p><ul>" + formattedIngredients + "</ul><p>Instructions:</p><ol>" + formattedInstructions + "</ol></div></li>");
+    $('#conversation').append(message);
     $('#message').val('');
 
 
@@ -240,22 +314,22 @@ function displayRecipe(recipeDetails, d, recipeID) {
         let userLogID = getCurrentUserID();
         console.log(clickedButton);
 
-        if (userLogID == "") {
+        if (userLogID === "") {
             alert("Please log in or create an account to save or favorite a recipe");
             return;
         }
     
         if (clickedButton.hasClass('heart-button')) {
             // Heart button clicked
-            handleButtonClick('favorite', recipeID, userLogID, clickedButton, `favorite/${recipeID}`, 'favorite', recipeName, formattedIngredients, formattedInstructions);
+            handleButtonClick('favorite', recipeID, userLogID, clickedButton, `favorite/${recipeID}`, 'favorite', recipeName, ingredients, instructions);
         } else if (clickedButton.hasClass('bookmark-button')) {
             // Bookmark button clicked
-            handleButtonClick('saved', recipeID, userLogID, clickedButton, `saved/recipe/${recipeID}`, 'saved', recipeName, formattedIngredients, formattedInstructions);
+            handleButtonClick('saved', recipeID, userLogID, clickedButton, `saved/recipe/${recipeID}`, 'saved', recipeName, ingredients, instructions);
         }
     });
 }
 
-function handleButtonClick(className, recipeID, userLogID, button, deleteEndpoint, postEndpoint, recipeName, ingredients, instructions) {
+async function handleButtonClick(className, recipeID, userLogID, button, deleteEndpoint, postEndpoint, recipeName, ingredients, instructions) {
     if (button.hasClass(className)) {
         button.removeClass(className);
         fetch(`http://localhost:3001/${deleteEndpoint}`, {
@@ -299,6 +373,7 @@ function handleButtonClick(className, recipeID, userLogID, button, deleteEndpoin
 }
 
 async function addToHistory(recipeID, userLogID, recipeName, ingredients, instructions) {
+    console.log(JSON.stringify({ id: recipeID, recipe: JSON.stringify({name: recipeName, ingredients: ingredients, instructions: instructions})}));
     try {
         const response = await fetch(`http://localhost:3001/history`, {
             method : 'POST',
@@ -315,3 +390,7 @@ async function addToHistory(recipeID, userLogID, recipeName, ingredients, instru
         console.log('Error:', error);
     }
 }
+
+window.addEventListener('unload', function (event) {
+    localStorage.setItem('currentUserLogID', "");
+});

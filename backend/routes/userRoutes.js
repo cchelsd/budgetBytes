@@ -1,17 +1,47 @@
-// import express from 'express';
-// import { config } from './config.js';
-// import Database from '../database.js';
-
-// const router = express.Router();
-// router.use(express.json());
-
-// const database = new Database(config);
-
 const express = require("express");
 const router = express.Router();
-const userData = require('../database');
+const userData = require('../userDatabase');
 
-// Create a new user
+/**
+ * @swagger
+ * /:
+ *   post:
+ *     summary: Create a new user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userLogID:
+ *                 type: string
+ *               isVegan:
+ *                 type: string
+ *                 enum: [ "true", "false" ]
+ *                 description: "VarChar field containing 'true' or 'false'"
+ *               isVegetarian:
+ *                 type: string
+ *                 enum: [ "true", "false" ]
+ *                 description: "VarChar field containing 'true' or 'false'"
+ *               isDairyFree:
+ *                 type: string
+ *                 enum: [ "true", "false" ]
+ *                 description: "VarChar field containing 'true' or 'false'"
+ *               isLowCarb:
+ *                 type: string
+ *                 enum: [ "true", "false" ]
+ *                 description: "VarChar field containing 'true' or 'false'"
+ *               isPescetarian:
+ *                 type: string
+ *                 enum: [ "true", "false" ]
+ *                 description: "VarChar field containing 'true' or 'false'"
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *       500:
+ *         description: Server error
+ */
 router.post('/', async (req, res) => {
   try {
     const user = req.body;
@@ -23,8 +53,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-
-// Get all users
 router.get('/getUsers', async (_, res) => {
     try {
       // Return a list of persons
@@ -34,10 +62,35 @@ router.get('/getUsers', async (_, res) => {
     } catch (err) {
       res.status(500).json({ error: err?.message });
     }
-  });
+});
 
-// Get user by userLogID
-router.get('/:userLogID', async (req, res) => {
+/**
+ * @swagger
+ * /{userLogID}:
+ *   get:
+ *     summary: Get user by userLogID
+ *     parameters:
+ *       - in: path
+ *         name: userLogID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Unique ID of the user
+ *     responses:
+ *       200:
+ *         description: User data retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 # Add properties of user object here
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Server error
+ */
+router.get('/:userLogID', async (req, res) => { 
   try {
     const userLogID = req.params.userLogID;
     console.log(`Fetching user: ${userLogID}`);
@@ -52,7 +105,32 @@ router.get('/:userLogID', async (req, res) => {
   }
 });
 
-// Update user preferences
+/**
+ * @swagger
+ * /{userLogID}:
+ *   put:
+ *     summary: Update user preferences
+ *     parameters:
+ *       - in: path
+ *         name: userLogID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Unique ID of the user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               # Define properties for updating user here
+ *     responses:
+ *       200:
+ *         description: User updated successfully
+ *       500:
+ *         description: Server error
+ */
 router.put('/:userLogID', async (req, res) => {
   try {
     const userLogID = req.params.userLogID;
@@ -65,13 +143,38 @@ router.put('/:userLogID', async (req, res) => {
   }
 });
 
-// Delete a user
+/**
+ * @swagger
+ * /{userLogID}:
+ *   delete:
+ *     summary: Delete a user
+ *     parameters:
+ *       - in: path
+ *         name: userLogID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Unique ID of the user
+ *     responses:
+ *       200:
+ *         description: User successfully deleted
+ *       404:
+ *         description: User not found or already deleted
+ *       500:
+ *         description: Server error
+ */
 router.delete('/:userLogID', async (req, res) => {
   try {
     const userLogID = req.params.userLogID;
     console.log(`Deleting user: ${userLogID}`);
     const rowsAffected = await userData.deleteUser(userLogID);
-    res.status(204).json({ rowsAffected });
+    // Check if the deletion was successful (e.g., rowsAffected > 0)
+    if ((rowsAffected.rowsAffected)[0] > 0) {
+      res.status(200).json({ message: 'User successfully deleted', rowsAffected });
+    } else {
+      // No rows affected implies the user was not found or already deleted
+      res.status(404).json({ message: 'User not found or already deleted' });
+    }
   } catch (err) {
     res.status(500).json({ error: err?.message });
   }

@@ -11,13 +11,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const checkCodeButton = document.getElementById('checkCodeButton');
     const codeCheckResult = document.getElementById('codeCheckResult');
     const userLogIDInput = document.getElementById('userLogID');
-
-    // Get a reference to the "Submit" button for new user registration
+    const updateUserFormContainer = document.getElementById('updateUserFormContainer');
+    const updateUserDietForm = document.getElementById('updateUserForm');
+    const updateStatusMessage = document.getElementById('updateStatusMessage');
     const newUserSubmitButton = document.getElementById('newUserSubmit');
-
-    // Get the userLogID value from the returning user form and store it in localStorage
-    const userLogID = document.getElementById('returningUserLogID').value;
-    localStorage.setItem('currentUserLogID', userLogID); // Store the user ID
 
     // Initially disable the submit button for new user registration
     newUserSubmitButton.disabled = true;
@@ -40,14 +37,25 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Toggle Form Visibility when clicking the "New User" or "Returning User" buttons
-    newUserButton.addEventListener('click', () => toggleForms('new'));
+    newUserButton.addEventListener('click', () => {resetFormValues(); toggleForms('new')});
     returningUserButton.addEventListener('click', () => toggleForms('returning'));
 
     // Function to toggle the visibility of new and returning user forms
     function toggleForms(formType) {
         newUserFormContainer.style.display = formType === 'new' ? 'block' : 'none';
         returningUserFormContainer.style.display = formType === 'returning' ? 'block' : 'none';
+        updateUserFormContainer.style.display = formType === 'update' ? 'block' : 'none';
+        updateDataButton.style.display = 'block';
     }
+
+    function resetFormValues() {
+        document.getElementById('userLogID').value = ''; // Reset userLogID input
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false; // Uncheck all checkboxes
+        });
+        document.getElementById('result').innerText = ''; // Clear result message
+    }    
 
     // Add a submission event listener for the New User Form
     if (newUserForm) {
@@ -89,9 +97,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (response.ok) {
                 document.getElementById('result').innerText = 'User successfully registered.';
+                const userLogID = userLogIDInput.value;
+                localStorage.setItem('currentUserLogID', userLogID); // Store the user ID
             } else {
                 const errorResponse = await response.json();
-                console.error(errorResponse);
                 document.getElementById('result').innerText = 'Error in registration: ' + errorResponse.error;
             }
         } catch (error) {
@@ -152,6 +161,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function displayUserData(userData) {
         if (userData.recordset && userData.recordset.length > 0) {
             const userPrefs = userData.recordset[0];
+            const skillLevel = userPrefs.skillLevel === null ? "Take the Cooking Assessment to discover your expertise and allow our" + 
+            " chatbot to offer recipes suited to your skill level." : userPrefs.skillLevel
             const prefsHtml = `
                 <ul>
                     <li>Vegan: ${userPrefs.isVegan}</li>
@@ -159,11 +170,108 @@ document.addEventListener('DOMContentLoaded', function() {
                     <li>Dairy Free: ${userPrefs.isDairyFree}</li>
                     <li>Low Carb: ${userPrefs.isLowCarb}</li>
                     <li>Pescetarian: ${userPrefs.isPescetarian}</li>
+                    <strong>Skill Level:</strong>
+                    <li>${skillLevel}</li>
                 </ul>
             `;
             returningResult.innerHTML = `<strong>Dietary Preferences:</strong> ${prefsHtml}`;
+            updateUserFormContainer.style.display = 'block';
         } else {
             returningResult.textContent = 'No dietary preferences found for this user.';
         }
     }
+
+    // Delete User button event handling
+    const deleteUserButton = document.getElementById('deleteUserButton');
+    deleteUserButton.addEventListener('click', handleDeleteUser);
+    
+    // Function to handle user deletion
+    async function handleDeleteUser() {
+        const userLogID = document.getElementById('returningUserLogID').value;
+        if (userLogID) {
+            try {
+                const response = await fetch(`http://localhost:3001/user/${userLogID}`, {
+                    method: 'DELETE'
+                });
+    
+                if (response.ok) {
+                    // Handle successful deletion
+                    returningResult.textContent = 'User successfully deleted.';
+                } else if (response.status === 404) {
+                    // Handle case where user not found or already deleted
+                    const errorResponse = await response.json();
+                    returningResult.textContent = errorResponse.message || 'User not found or already deleted.';
+                } else {
+                    // Handle other errors
+                    const errorResponse = await response.json();
+                    returningResult.textContent = 'Error in deletion: ' + (errorResponse.error || 'Unknown error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                returningResult.textContent = 'Network error in deletion.';
+            }
+        } else {
+            returningResult.textContent = 'Please enter a valid User ID.';
+        }
+    }
+
+    document.getElementById('updateDataButton').addEventListener('click', async function(event) {
+        event.preventDefault();
+    
+        // Retrieve the current user's ID from localStorage
+        const userLogID = localStorage.getItem('currentUserLogID');
+        if (!userLogID) {
+            alert("User ID is missing. Please log in again.");
+            return;
+        }
+    
+        // Gather form input values for dietary preferences
+        const isVegan = document.querySelector('input[name="updateIsVegan"]').checked.toString();
+        const isVegetarian = document.querySelector('input[name="updateIsVegetarian"]').checked.toString();
+        const isDairyFree = document.querySelector('input[name="updateIsDairyFree"]').checked.toString();
+        const isLowCarb = document.querySelector('input[name="updateIsLowCarb"]').checked.toString();
+        const isPescetarian = document.querySelector('input[name="updateIsPescetarian"]').checked.toString();
+    
+        // Create an object with the updated user data
+        const updatedUserData = {
+            userLogID, // Include the userLogID in the update payload
+            isVegan,
+            isVegetarian,
+            isDairyFree,
+            isLowCarb,
+            isPescetarian
+        };
+    
+        try {
+            const response = await fetch(`http://localhost:3001/user/${userLogID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedUserData)
+            });
+    
+            if (response.ok) {
+                  // Only display the success message once
+                if (!this.hasUpdated) {
+                    alert('Diet preferences updated successfully.');
+                    this.hasUpdated = true; // Set flag to indicate update has occurred
+
+                    // Reset the flag after a short delay
+                    setTimeout(() => { this.hasUpdated = false; }, 3000);
+                }
+
+                // Fetch and display the updated data
+                fetchUserData(userLogID);
+
+            } else {
+                const errorResponse = await response.json();
+                alert('Error updating preferences: ' + errorResponse.error);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Network error while updating preferences.');
+        }
+    });
 });
+
