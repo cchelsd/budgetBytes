@@ -5,6 +5,25 @@ let validIDs = [];
 let recipes = [];
 let resultArr = [];
 
+/**
+ * @swagger
+ * /{userID}:
+ *   get:
+ *     summary: Retrieve recipes from other users that comply with a specific user's dietary preferences
+ *     tags: [Explore]
+ *     parameters:
+ *       - in: path
+ *         name: userID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User Log ID
+ *     responses:
+ *       200:
+ *         description: Recipes from other users that comply with the user's preferences were returned
+ *       400:
+ *         description: Recipes from other users that comply with the user's preferences were not found
+ */
 router.get('/:userID', async (request, response) => {
     usersData = [];
     validIDs = [];
@@ -26,6 +45,26 @@ router.get('/:userID', async (request, response) => {
     return response.status(200).json(resultArr);
 });
 
+
+/**
+ * @swagger
+ * /favorites/{userID}:
+ *   get:
+ *     summary: Retrieve favorite recipes from other users that comply with a specific user's dietary preferences 
+ *     tags: [Explore]
+ *     parameters:
+ *       - in: path
+ *         name: userID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User Log ID
+ *     responses:
+ *       200:
+ *         description: Favorite recipes from other users that comply with the user's preferences were returned
+ *       400:
+ *         description: Favorite recipes from other users that comply with the user's preferences were not found
+ */
 router.get('/favorites/:userID', async (request, response) => {
     usersData = [];
     validIDs = [];
