@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const dbConnection = require("../config");
 let usersData = [];
 let validIDs = [];
 let recipes = [];
@@ -37,7 +36,6 @@ router.get('/favorites/:userID', async (request, response) => {
     for (const validID of validIDs) {
         await fetchFavorites(validID);
     }
-    console.log("Valid IDs:", validIDs);
     for (const innerArray of recipes) {
         for (const recipeObj of innerArray) {
             resultArr.push(recipeObj);
@@ -77,7 +75,6 @@ async function findSimilarUsers(userID, table) {
 }
 
 async function getUserPreferences(userID) {
-    console.log(userID);
     const response = await fetch(`http://localhost:3001/user/${userID}`, {
         method: 'GET',
         headers: {
@@ -102,7 +99,6 @@ function comparePreferences(obj1, obj2) {
 }
 
 async function fetchRecipeHistory(userID) {
-    console.log("Fetching History", userID)
     const response = await fetch(`http://localhost:3001/history`, {
         method: 'GET',
         headers: {
@@ -112,7 +108,6 @@ async function fetchRecipeHistory(userID) {
     });
     const history = await response.json();   
     const recipeHistory = history[0]; 
-    console.log("recipes", recipeHistory);
     recipes.push(recipeHistory);
 }
 

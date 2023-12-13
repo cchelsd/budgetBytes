@@ -1,45 +1,6 @@
-// import sql from 'mssql';
 const sql = require('mssql');
 const dbConnection = require('./config');
-// class Database {
-//   config = {};
-//   poolConnection = null;
-//   connected = false;
-//
-//   constructor(config) {
-//     this.config = config;
-//     console.log(`Database: config: ${JSON.stringify(config)}`);
-//   }
-//
-//   async connect() {
-//     try {
-//       console.log(`Database connecting...${this.connected}`);
-//       if (!this.connected) {
-//         this.poolConnection = await sql.connect(this.config);
-//         this.connected = true;
-//         console.log('Database connection successful');
-//       } else {
-//         console.log('Database already connected');
-//       }
-//     } catch (error) {
-//       console.error(`Error connecting to database: ${JSON.stringify(error)}`);
-//     }
-//   }
-//
-//   async disconnect() {
-//     try {
-//       if (this.poolConnection) {
-//         this.poolConnection.close();
-//         this.connected = false;
-//         console.log('Database connection closed');
-//       }
-//     } catch (error) {
-//       console.error(`Error closing database connection: ${error}`);
-//     }
-//   }
-
 async function createUser(user) {
-    // await this.connect();
   const { userLogID, isVegan, isVegetarian, isDairyFree, isLowCarb, isPescetarian } = user;
     const request = dbConnection.request();
     return request
@@ -53,13 +14,11 @@ async function createUser(user) {
 }
 
   async function readAll() {
-    // await this.connect();
     const request = dbConnection.request();
     return request.query('SELECT * FROM BudgetBytesTable');
   }
 
   async function readUser(userLogID) {
-    // await this.connect();
     const request = dbConnection.request();
     return request
       .input('userLogID', sql.VarChar, userLogID)
@@ -67,7 +26,6 @@ async function createUser(user) {
   }
 
   async function updateUser(userLogID, updatedUser) {
-    // await this.connect();
     const { isVegan, isVegetarian, isDairyFree, isLowCarb, isPescetarian } = updatedUser;
     const request = dbConnection.request();
     return request
@@ -81,7 +39,6 @@ async function createUser(user) {
   }
 
   async function deleteUser(userLogID) {
-    // await this.connect();
     const request = dbConnection.request();
     const query = `
       DELETE FROM BudgetBytesTable WHERE userLogID = @userLogID;
@@ -93,7 +50,7 @@ async function createUser(user) {
       .input('userLogID', sql.VarChar, userLogID)
       .query(query);
   }
-// export default Database;
+
 module.exports = {
     createUser,
     readAll,

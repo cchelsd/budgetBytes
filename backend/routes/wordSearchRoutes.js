@@ -61,7 +61,6 @@ router.use(cors());
  */
 router.post('/', (req, res) => {
   try {
-    console.log('Request received:', req.body);
     const { recipe, searchWord } = req.body;
 
     if (!recipe || !searchWord) {
