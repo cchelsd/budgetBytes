@@ -12,7 +12,6 @@ async function fetchUserFavorites(userID) {
         }
         const userFavorites = await response.json();   
         const recipes = userFavorites[0];  
-        console.log(recipes);  
         return recipes;
     } catch (error) {
         console.error('Error:', error);

@@ -476,6 +476,7 @@ p {
     padding-bottom: 50px;
 }
 
+/* ---------------------- favorite recipes ---------------------- */
 .heart-button {
     /* position: absolute;
     top: 5px;
@@ -568,7 +569,6 @@ p {
     display: block;
     width: 88%;
     margin: auto;
-    padding-left: 13px;
 }
 
 .recipeCards h5 {

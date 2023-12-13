@@ -2,7 +2,7 @@ $(document).ready(function () {
     let message = $('#message');
     let conversation = $('#conversation');
     // when a send button is clicked to send a message
-    $('button').on('click', function () {
+    $('#send').on('click', function () {
         // capture the message value from the textbox
         var text = $('#message').val();
         // output on the console window for debugging purposes
