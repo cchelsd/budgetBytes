@@ -20,8 +20,12 @@ p {
     line-height: 1.2;
 }
 
-.logIn, .startDiv {
+.logIn{
     margin-bottom: 35%;
+}
+
+.startDiv {
+    margin-bottom: 3%;
 }
 
 .disabled {
@@ -235,7 +239,7 @@ p {
 #userAvatar {
     width: 35px;
     height: 35px;
-    margin-top: 10px;
+    margin-top: 0px;
     overflow: hidden;
 }
 
@@ -619,7 +623,8 @@ p {
     width: calc(100% / 7 - 10px);
 }
 
-#meal-plan-container .recipe-details {
+/* changed from 50px */
+#meal-plan-container .recipe-details { 
     margin-top: 50px;
 }
 
@@ -967,7 +972,7 @@ label {
 #result-container button {
     margin-top: 20px;
 }
-/* meal plan*/
+/* meal plan */
 #meal-plan-container {
     text-align: center;
     margin-top: 20px;

@@ -1,6 +1,26 @@
 const express = require('express');
 const router = express.Router();
 
+
+/**
+ * @swagger
+ * /{address}:
+ *   get:
+ *     summary: Retrieve coordinates of an address from the Google Geocoding API
+ *     tags: [GroceryStore]
+ *     parameters:
+ *       - in: path
+ *         name: address
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Given address
+ *     responses:
+ *       404:
+ *         description: No coordinates were found for the given address
+ *       500:
+ *         description: Internal error
+ */
 // Define an API endpoint to fetch coordinates from Google Geocoding API
 router.get('/:address', async (req, res) => {
   const address = req.params.address;
@@ -25,6 +45,29 @@ router.get('/:address', async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /mapdata/{latitude}/{longitude}:
+ *   get:
+ *     summary: Retrieve a map of grocery stores near given coordinates
+ *     tags: [GroceryStore]
+ *     parameters:
+ *       - in: path
+ *         name: latitude
+ *         schema:
+ *          type: string
+ *         required: true
+ *         description: coordinates of an address
+ *       - in: path
+ *         name: longitude
+ *         schema:
+ *          type: string
+ *         required: true
+ *         description: longitude of an address
+ *     responses:
+ *       500:
+ *         description: Internal error
+ */
 router.get('/mapdata/:latitude/:longitude', async (req, res) => {
     const { latitude, longitude } = req.params;
     const GEOAPIFY_API_KEY = '42d8ca6fe1d34c1ba2f69cac1818942e';
