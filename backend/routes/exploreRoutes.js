@@ -88,7 +88,7 @@ async function getUserPreferences(userID) {
 }
 
 function comparePreferences(obj1, obj2) {
-    const keys = Object.keys(obj1);
+    const keys = Object.keys(obj1).slice(0, 5);
     let isValid = true;
     keys.forEach(key => {
         if (obj1[key] === 'true' && obj2[key] !== 'true') {
