@@ -1,6 +1,6 @@
-async function fetchUserFavorites(userID) {
+async function fetchUserHistory(userID) {
     try {
-        const response = await fetch(`http://localhost:3001/favorite`, {
+        const response = await fetch(`http://localhost:3001/history`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -8,7 +8,7 @@ async function fetchUserFavorites(userID) {
             }
         });
         if (!response.ok) {
-            throw new Error('Failed to fetch users favorite recipes');
+            throw new Error('Failed to fetch users saved recipes');
         }
         const userFavorites = await response.json();   
         const recipes = userFavorites[0];  
@@ -19,33 +19,12 @@ async function fetchUserFavorites(userID) {
     }
 }
 
-async function removeFromFavorites(userID, recipeID) {
-    try {
-        const response = await fetch(`http://localhost:3001/favorite/${recipeID}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'user-log-id': userID
-            }
-        });
-        if (!response.ok) {
-            throw new Error('Failed to delete recipe from saved.');
-        }
-        await $('.recipeCards').empty();
-        console.log(recipeID, userID);
-        displayRecipeCards(userID); 
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-
 async function displayRecipeCards(userID) {
     $("#msgContainer").empty();
-    const recipes = await fetchUserFavorites(userID);
-    const content = $("<div>", {id: "cardContent"});
+    const recipes = await fetchUserHistory(userID);
     if (recipes.length == 0) {
         const msgDiv = $("<div>", {class: "startDiv"});
-        const message = $("<h5>", {class: "startMsg"}).text("Chat with Budget Bytes to favorite recipes! Simply click the heart icon beside a recipe to store it in your favorite recipes.");
+        const message = $("<h5>", {class: "startMsg"}).text("Begin chatting with Budget Bytes to explore your recipe history!");
         msgDiv.append(message);
         $('.recipeCards').append(msgDiv);
     }
@@ -54,7 +33,7 @@ async function displayRecipeCards(userID) {
         const recipeDetails = $("<div>").addClass("recipe-details");
         
         // Parse HTML content for ingredients
-        const ingredientsList = $('<ul>').html(recipe.recipe.ingredients);
+        const ingredientsList = $('<div>').append('<p>').html(recipe.recipe.ingredients);
         const ingredientItems = ingredientsList.find('li');
 
         // Extract and append ingredients to the final ingredients list
@@ -75,22 +54,23 @@ async function displayRecipeCards(userID) {
             finalInstructionsList.append(instruction);
         });
 
+        console.log(recipe.recipe.name);
+
         // Add recipe name, ingredients list, and instructions list to recipe details
         recipeDetails.append(`<p>${recipe.recipe.name}</p>`);
-        recipeDetails.append('<h4>Ingredients:</h4>').append(finalIngredientsList);
+        recipeDetails.append('<h4>Ingredients:</h4>').append(ingredientsList);
         recipeDetails.append('<h4>Instructions:</h4>').append(finalInstructionsList);
 
         // Attach ingredients and instructions data to the recipe card element
-        recipeCard.data("ingredients", finalIngredientsList.clone());
+        recipeCard.data("ingredients", ingredientsList.clone());
         recipeCard.data("instructions", finalInstructionsList.clone());
-        recipeCard.data("recipeID", recipe.recipeID);    
+        
         // Append the created recipe details to the card
         recipeCard.on("click", () => handleRecipeSelection(recipeCard));
         recipeCard.append(recipeDetails);
-        content.append(recipeCard);
+        $('.recipeCards').append(recipeCard);
     });
-    console.log(content);
-    $('.recipeCards').append(content);
+    $('<h1>Recipe History</h1>').insertBefore($('.recipeCards'));
 }
 
  /**
@@ -101,20 +81,16 @@ async function displayRecipeCards(userID) {
     const name = selectedRecipe.find('.recipe-details > p').text();
     const ingredients = selectedRecipe.data("ingredients").clone();
     const instructions = selectedRecipe.data("instructions").clone();
-    const recipeID = selectedRecipe.data("recipeID");
-    const userID = getCurrentUserID();
     // Update the modal content with the selected recipe details
     $("#recipeName").text(name);
     $("#recipeIngredients").empty().append(ingredients);
     $("#recipeInstructions").empty().append(instructions);
     // Show the modal
     $("#recipeModal").modal("show");
-    $("#yesBtn").off("click").on("click", () => removeFromFavorites(userID, recipeID));
 }
 
-$(document).ready(async function() {
+$(document).ready(function() {
     if (getCurrentUserID() !== "") {
-        await displayRecipeCards(getCurrentUserID());
-        $('<h1>Favorite Recipes</h1>').insertBefore($('.recipeCards'));
+        displayRecipeCards(getCurrentUserID());
     }
 });

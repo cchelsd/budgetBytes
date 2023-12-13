@@ -2,15 +2,16 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Favorite Recipes | Budget Bytes</title>
+        <title>Meal Plan | Budget Bytes</title>
         <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <link rel="stylesheet" href="styles.css">
         <script src="chat.js"></script>
-        <script src="favorites.js"></script>
+        <script src="mealPlan.js"></script>
     </head>
-    <body id="favoritePage">
+
+    <body>
         <header>
             <nav class="navbar navbar-expand-lg bg-body-tertiary">
                 <div class="container-fluid">
@@ -26,9 +27,8 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Recipes</a>
                                 <ul class="dropdown-menu">
-                                    <!-- <li class=>Your recipes</li> -->
                                     <li><a class="dropdown-item disabled" aria-disabled="true">Your Recipes</a></li>
-                                    <li><a class="dropdown-item active" href="favoriteRecipesPage.html">Favorite Recipes</a></li>
+                                    <li><a class="dropdown-item" href="favoriteRecipesPage.html">Favorite Recipes</a></li>
                                     <li><a class="dropdown-item" href="savedRecipesPage.html">Saved Recipes</a></li>
                                     <li><a class="dropdown-item" href="recipeHistoryPage.html">Recipe History</a></li>
                                     <li><hr class="dropdown-divider"></li>
@@ -36,41 +36,49 @@
                                     <li><a class="dropdown-item" href="wordCount.html">Recipe Search</a></li>
                                 </ul>
                             </li>
-                            <li class="nav-item"><a class="nav-link" href="mealPlanPage.html">Meal Plan</a></li>
+                            <li class="nav-item"><a class="nav-link active" href="mealPlanPage.html">Meal Plan</a></li>
                             <li class="nav-item"><a class="nav-link" href="groceryList.html">Grocery List</a></li>
                             <li class="nav-item"><a class="nav-link" href="cookingAssessment.html">Cooking Assessment</a></li>
                             <li class="nav-item"><a class="nav-link" href="aboutPage.html">About</a></li>
                         </ul>
                     </div>
                 </div>
-            </nav>
+              </nav>
         </header>
 
-        <main class=recipes>
-            <div id="msgContainer">
-                <div class="logIn">
-                    <h4>Log in to view your favorite recipes.</h4>
-                </div>
-            </div>
-            <section class="recipeCards"></section>
+        <main>
+            <!-- Container for the weekly meal plan -->
+            <div id="meal-plan-container">
+                <!-- Heading for the meal plan section -->
+                <h1>Weekly Meal Plan</h1>
+                <h4>Generate a meal plan based on:</h4>
 
-            <!-- Modal to confirm removal of recipe -->
-            <div class="mainDoc tab-content" id="myTabContent"></div>
-            <div class="modal fade" id="confirmModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="newCollectionModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirm</h1>
-                        </div>
-                        <div class="modal-body">
-                            <p>Are you sure you want to remove this recipe from Favorites?</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" id="cancelBtn" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" id="yesBtn" class="btn btn-primary" data-bs-dismiss="modal">Yes</button>
-                        </div>
-                    </div>
-                </div>
+                <button class="btn btn-primary generate" id="genAll">
+                    All Budget Bytes Recipes
+                </button>
+
+                <button class="btn btn-primary generate" id="allPref">
+                    All Recipes By Preference
+                </button>
+
+                <button class="btn btn-primary generate" id="favePref">
+                    Popular Recipes By Preference
+                </button>
+
+                <button class="btn btn-primary generate" id="genFave">
+                    Your Favorite Recipes
+                </button>
+
+                <button class="btn btn-primary generate" id="genSaved">
+                    Your Saved Recipes
+                </button>
+
+                <button class="btn btn-primary generate" id="genHistory">
+                    Your Recipe History
+                </button>
+
+                <!-- Container to display generated meal cards -->
+                <div class="recipeCards"></div>
             </div>
 
             <!-- Modal for displaying detailed recipe information -->
@@ -91,18 +99,24 @@
                             <p id="recipeInstructions"></p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" id="delFave" data-bs-target="#confirmModal" data-bs-toggle="modal">Delete From Favorites</button>
                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
             </div>
         </main>
+
         <footer class="py-3 my-2">
             <ul class="nav justify-content-center border-bottom pb-3 mb-3">
                 <li class="nav-item"><a href="landingPage.html" class="nav-link px-2 text-muted">Home</a></li>
-                <li class="nav-item active"><a href="chatPage.html" class="nav-link px-2 text-muted">Chat with Budget Bytes</a></li>
-                <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Locate Grocery Stores</a></li>
+                <li class="nav-item"><a href="chatPage.html" class="nav-link px-2 text-muted">Chat with Budget Bytes</a>
+                </li>
+                <li class="nav-item"><a href="locateStores.html" class="nav-link px-2 text-muted">Locate Stores</a></li>
+                <li class="nav-item active"><a href="mealPlanPage.html" class="nav-link px-2 text-muted">Meal Plan</a></li>
+                <li class="nav-item"><a href="wordCount.html" class="nav-link px-2 text-muted">Word Search</a>
+                </li>
+                <li class="nav-item"><a href="cookingAssessment.html" class="nav-link px-2 text-muted">Cooking
+                        Assessment</a></li>
                 <li class="nav-item"><a href="aboutPage.html" class="nav-link px-2 text-muted">About</a></li>
             </ul>
             <p class="text-center text-muted">© 2023 Budget Bytes</p>

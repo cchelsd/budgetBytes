@@ -6,10 +6,16 @@ const favoriteRoutes = require("./routes/favoriteRoutes");
 const userRoutes = require("./routes/userRoutes");
 const savedRoutes = require("./routes/savedRoutes");
 const historyRoutes = require("./routes/historyRoutes");
-const wordCountRoutes = require("./wordCount");
-const mealPlanRoutes = require("./mealPlan");
+const exploreRoutes = require("./routes/exploreRoutes");
+const wordCountRoutes = require("./routes/wordSearchRoutes");
+const mealPlanRoutes = require("./routes/mealPlanRoutes");
+const groceryRoutes = require("./routes/groceryRoutes");
+const assessmentRoutes = require("./routes/assessmentRoutes");
+const storeRoutes = require("./routes/groceryStoreRoutes");
 const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
+const port = 3001;
+
 // var bodyParser = require('body-parser');
 
 // // ----------------------------------------------
@@ -38,19 +44,14 @@ app.use(cors());
 const swaggerOptions = {
     swaggerDefinition: {
       info: {
-        title: "Your API",
+        title: "Budget Bytes",
         version: "1.0.0",
         description: "API documentation for your Express.js application",
       },
-      servers: [
-        {
-          url: "http://localhost:3001",
-          description: "Local development server",
-        },
-      ],
+      servers: [`http://localhost:${port}`],
     },
     apis: ["./backend/**/*.js"], // Path to the API routes
-  };
+};
 
 // ----------------------------------------------
 // Initialize Swagger JSDoc
@@ -73,9 +74,13 @@ app.use('/favorite', favoriteRoutes);
 app.use('/user', userRoutes);
 app.use('/saved', savedRoutes);
 app.use('/history', historyRoutes);
-app.use('/search',wordCountRoutes);
-app.use('/mealplan',mealPlanRoutes);
+app.use('/groceryList', groceryRoutes);
+app.use('/search', wordCountRoutes);
+app.use('/mealplan', mealPlanRoutes);
+app.use('/explore', exploreRoutes);
+app.use('/assess', assessmentRoutes);
+app.use('/stores', storeRoutes);
 
-app.listen(3001, () => {
-    console.log("Express server is running and listening");
+app.listen(port, () => {
+    console.log(`Express server is running and listening on port ${port}`);
 }); 

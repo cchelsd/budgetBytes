@@ -1,6 +1,5 @@
 // Wait for the DOM to be fully loaded before executing the code
 document.addEventListener('DOMContentLoaded', function() {
-
     var selectedOption = 'none';
     //FIGURE OUT WAY TO NOT ALLOW DUPLICATE ADDS?? MAYBE THROW ERROR OR COMBINE # OF ITEMS ??
     $(function hideOthers() {
@@ -18,7 +17,6 @@ document.addEventListener('DOMContentLoaded', function() {
         $("#deleteName").hide();
         $("#deleteQuantity").hide();
 
-        
         //show the elements that correspondto this button
         $("#addName").show();
         $("#addQuantity").show();
@@ -58,10 +56,10 @@ document.addEventListener('DOMContentLoaded', function() {
     $("#deleteListButton").off("click").on("click", function(e) {
         e.preventDefault();
         $(".crudInput").hide();
-
-        if (window.confirm("delete entire grocery list?")) {
+        const userLogID = document.getElementById('idBox').value;
+        if (window.confirm("Delete entire grocery list?")) {
             //delete list
-            selectedOption = 'deleteList';
+            handleDeletingList(e);
         } 
         //else, do not change anything
     });
@@ -101,7 +99,8 @@ document.addEventListener('DOMContentLoaded', function() {
     //verify that the user has an account
     async function verifyUser(userLogID) {
         try {
-            const response = await fetch(`http://localhost:3000/user/${userLogID}`); 
+            const response = await fetch(`http://localhost:3001/user/${userLogID}`); 
+            console.log(response);
             if (response.ok) {
                 // Fetch user's grocery list
                 fetchGroceryList(userLogID);
@@ -120,17 +119,23 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get user's grocery list from database
     async function fetchGroceryList(userLogID) {
         try {
-            const response = await fetch(`http://localhost:3000/groceryList/${userLogID}`, {
+            const response = await fetch(`http://localhost:3001/groceryList/${userLogID}`, {
                 "Access-Control-Allow-Origin" : "*" 
             }); 
-            if (response.ok) {
+            if (response.status === 404) {
+                createGroceryList(userLogID);
+                $(".listOptions").show();
+                $("#theList").show();
+                $(".idSubmission").hide();
+                $("#loginHeader").hide();
+            } else if (response.ok) {
                 const groceryList = await response.json();
                 displayGroceryList(groceryList);
                 $(".listOptions").show();
                 $("#theList").show();
                 $(".idSubmission").hide();
                 $("#loginHeader").hide();
-            } else {
+            } else if (response.status == 500) {
                 $("#loginMessageOutput").text('User\'s grocery list not found or error retrieving list');
             }
         } catch (error) {
@@ -139,15 +144,35 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    async function createGroceryList(userLogID) {
+        try {
+            const response = await fetch(`http://localhost:3001/groceryList/create`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({userLogID: userLogID})
+            }); 
+            const data = await response.json();
+            return data.Success;
+        } catch (error) {
+            console.error('Error:', error);
+            $("#loginMessageOutput").text('Error fetching data');
+            throw error;
+        }
+    }
+
     // Function to display the user's grocery list
     function displayGroceryList(groceryList) {
-        if (groceryList.recordset[0] && groceryList.recordset.length > 0) {
+        if ((groceryList.recordset[0]).itemName === null && groceryList.recordset.length === 1) {
+            $("#groceryListDisplay").empty();
+            $("#groceryEmptyStatus").show();
+        } else if (groceryList.recordset[0] && groceryList.recordset.length > 0 ) {
+            $("#groceryListDisplay").empty();
             $("#groceryEmptyStatus").hide();
-            $('ul').empty();
-            $.each(groceryList.recordset, function (index, listItem) {
+            for (let index = 1; index < groceryList.recordset.length; index++) {
                 $("#groceryListDisplay").append('<li class="list-group-item displayItem"> Item: ' + groceryList.recordset[index].itemName + '<br> <span class="displayQuantity"> Quantity: ' + groceryList.recordset[index].itemQuantity + '</span></li>');
-            });
+            }
         } else {
+            $("#groceryListDisplay").empty();
             $("#groceryEmptyStatus").show();
         }
     }
@@ -167,18 +192,19 @@ document.addEventListener('DOMContentLoaded', function() {
             itemQuantity: itemQuantity
         };
 
+        await fetchGroceryList(userLogID);
+
         try {
             // Send a POST request to add to the user's grocery list
-            const response = await fetch('http://localhost:3000/groceryList/' + userLogID, {
+            const response = await fetch('http://localhost:3001/groceryList/' + userLogID, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(groceryListItem)
             });
-
             if (response.ok) {
                 $("#groceryEmptyStatus").hide();
                 $("#optionMessageOutput").text('Item added to list!');
-                fetchGroceryList(userLogID);
+                await fetchGroceryList(userLogID);
             } else {
                 const errorResponse = await response.json();
                 $("#optionMessageOutput").text('Error adding item to list - ' + errorResponse.error);
@@ -206,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             // Send a PUT request to update item in grocery list
-            const response = await fetch('http://localhost:3000/groceryList/' + userLogID, {
+            const response = await fetch('http://localhost:3001/groceryList/' + userLogID, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'userIDGroceryList' : userLogID, 'itemToUpdate': groceryListItem.itemName },
                 body: JSON.stringify(groceryListItem)
@@ -237,7 +263,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             // Send a DELETE request to delete from the user's grocery list
-            const response = await fetch('http://localhost:3000/groceryList/' + userLogID + "/" + itemName, {
+            const response = await fetch('http://localhost:3001/groceryList/' + userLogID + "/" + itemName, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json', 'userIDGroceryList' : userLogID, 'itemToDelete': itemName }
             });
@@ -266,11 +292,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             // Send a DELETE request to delete entire grocery list
-            const response = await fetch('http://localhost:3000/groceryList/' + userLogID, {
+            const response = await fetch('http://localhost:3001/groceryList/' + userLogID, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json', 'userIDGroceryList' : userLogID }
             });
             if (response.ok) {
+                $("#groceryListDisplay").empty();
                 $("#optionMessageOutput").text('List deleted');
                 $('ul').empty();
             } else {

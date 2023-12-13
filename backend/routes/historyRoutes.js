@@ -34,6 +34,19 @@ router.post('/', async (request, response) => {
     }); 
 });
 
+router.get('/notUser', async (request, response) => {
+    const userLogID = request.headers['user-log-id'];
+    const sqlQuery = "SELECT DISTINCT userLogID FROM recipeHistory WHERE userLogID <> @userLogID;";
+    const sqlRequest = dbConnection.request();
+    sqlRequest.input('userLogID', userLogID);
+    sqlRequest.query(sqlQuery, (err, result) => {
+    if (err) {
+        return response.status(400).json({Error: "Error in the SQL statement. Please check."});
+    }
+    return response.status(200).json(result);
+    }); 
+});
+
 router.get('/all', async (request, response) => {
     const sqlQuery = "SELECT * FROM recipeHistory";
     const sqlRequest = dbConnection.request();
