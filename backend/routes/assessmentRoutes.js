@@ -68,6 +68,7 @@ router.put('/:userID', (req, res) => {
         if (err) {
             return res.status(400).json({ Error: "Skill level was not updated." });
         } else {
+            res.setHeader('X-Skill-Level', skillLevel);
             return res.status(200).json({ SkillLevel: skillLevel });
         }
     });

@@ -11,6 +11,7 @@ router.get('/', async (request, response) => {
     if (err) {
         return response.status(400).json({Error: "Error in the SQL statement. Please check."});
     }
+    response.setHeader('X-Faves-Of', userLogID);
     return response.status(200).json(parseRecipeJSON(result));
     }); 
 });
@@ -24,6 +25,7 @@ router.get('/all', async (request, response) => {
     if (err) {
         return response.status(400).json({Error: "Error in the SQL statement. Please check."});
     }
+    response.setHeader('X-Faves-All', 'every users faves');
     return response.status(200).json(parseRecipeJSON(result));
     }); 
 });
@@ -37,6 +39,7 @@ router.get('/notUser', async (request, response) => {
     if (err) {
         return response.status(400).json({Error: "Error in the SQL statement. Please check."});
     }
+    response.setHeader('X-Exclude-Faves-ID', userLogID);
     return response.status(200).json(result);
     }); 
 });
@@ -50,6 +53,7 @@ router.post('/', async (request, response) => {
     sqlRequest.input('userLogID', userLogID);
     sqlRequest.input('recipeID', recipeID);
     sqlRequest.input('recipe', recipe);
+    response.setHeader('X-Add-Fave', recipeID);
     sqlRequest.query(sqlQuery, (err, result) => {
         if (err) {
             return response.status(400).json({ Error: "Record was not added." });
@@ -66,6 +70,7 @@ router.delete('/:id', async (request, response) => {
     const sqlRequest = dbConnection.request();
     sqlRequest.input('userLogID', userLogID);
     sqlRequest.input('recipeID', recipeID);
+    response.setHeader('X-Delete-Fave', recipeID);
     sqlRequest.query(sqlQuery, (err, result) => {
         if (err) {
             return response.status(400).json({ Error: "Record was not deleded." });
