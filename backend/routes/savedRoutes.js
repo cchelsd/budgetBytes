@@ -2,6 +2,24 @@ const express = require("express");
 const router = express.Router();
 const dbConnection = require("../config");
 
+/**
+ * @swagger
+ * /saved:
+ *   get:
+ *     summary: Retrieve all saved recipes for a user
+ *     parameters:
+ *       - in: header
+ *         name: user-log-id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User log ID
+ *     responses:
+ *       200:
+ *         description: A list of saved recipes
+ *       400:
+ *         description: Error in the SQL statement
+ */
 router.get('/', async (request, response) => {
     const userLogID = request.headers['user-log-id'];
     const sqlQuery = 'SELECT * FROM savedRecipes WHERE userLogID = @userLogID ORDER BY CAST (recipeID as BIGINT) DESC;';
@@ -15,6 +33,36 @@ router.get('/', async (request, response) => {
     }); 
 });
 
+
+/**
+ * @swagger
+ * /saved:
+ *   post:
+ *     summary: Save a new recipe for a user
+ *     parameters:
+ *       - in: header
+ *         name: user-log-id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User log ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: string
+ *               recipe:
+ *                 type: object
+ *     responses:
+ *       200:
+ *         description: Recipe was added
+ *       400:
+ *         description: Error adding the recipe
+ */
 router.post('/', async (request, response) => {
     const userLogID = request.headers['user-log-id'];
     const recipeID = request.body.id;
@@ -33,6 +81,24 @@ router.post('/', async (request, response) => {
     }); 
 });
 
+/**
+ * @swagger
+ * /saved/collections:
+ *   get:
+ *     summary: Retrieve collections of saved recipes for a user
+ *     parameters:
+ *       - in: header
+ *         name: user-log-id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User log ID
+ *     responses:
+ *       200:
+ *         description: A list of collections
+ *       400:
+ *         description: Error in the SQL statement
+ */
 router.get('/collections', async (request, response) => {
     const userLogID = request.headers['user-log-id'];
     const sqlQuery = `SELECT DISTINCT CAST([collection] AS VARCHAR(50)) FROM savedRecipes WHERE userLogID = @userLogID;`;
@@ -47,6 +113,30 @@ router.get('/collections', async (request, response) => {
     }); 
 });
 
+/**
+ * @swagger
+ * /saved/collections/{collection}:
+ *   get:
+ *     summary: Retrieve saved recipes by collection for a user
+ *     parameters:
+ *       - in: path
+ *         name: collection
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Collection name
+ *       - in: header
+ *         name: user-log-id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User log ID
+ *     responses:
+ *       200:
+ *         description: A list of saved recipes in the specified collection
+ *       400:
+ *         description: Error in the SQL statement
+ */
 router.get('/collections/:collection', async (request, response) => {
     const userLogID = request.headers['user-log-id'];
     const collection = request.params.collection;
@@ -62,6 +152,39 @@ router.get('/collections/:collection', async (request, response) => {
     }); 
 }); 
 
+/**
+ * @swagger
+ * /saved/collections/collection/{recipeID}:
+ *   put:
+ *     summary: Update the collection of a saved recipe
+ *     parameters:
+ *       - in: path
+ *         name: recipeID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Recipe ID
+ *       - in: header
+ *         name: user-log-id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User log ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               collection:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Record was updated
+ *       400:
+ *         description: Error updating the record
+ */
 router.put('/collections/collection/:recipeID', async (request, response) => {
     const userLogID = request.headers['user-log-id'];
     const recipeID = request.params.recipeID;
@@ -83,6 +206,30 @@ router.put('/collections/collection/:recipeID', async (request, response) => {
     }); 
 }); 
 
+/**
+ * @swagger
+ * /saved/recipe/{recipeID}:
+ *   delete:
+ *     summary: Delete a saved recipe
+ *     parameters:
+ *       - in: path
+ *         name: recipeID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Recipe ID
+ *       - in: header
+ *         name: user-log-id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User log ID
+ *     responses:
+ *       200:
+ *         description: Recipe was deleted
+ *       400:
+ *         description: Error deleting the recipe
+ */
 router.delete('/recipe/:recipeID', async (request, response) => {
     const recipeID = request.params.recipeID;
     const userLogID = request.headers['user-log-id'];

@@ -2,6 +2,24 @@ const express = require("express");
 const router = express.Router();
 const dbConnection = require("../config");
 
+/**
+ * @swagger
+ * /history:
+ *   get:
+ *     summary: Retrieve all recipe history for a specific user
+ *     parameters:
+ *       - in: header
+ *         name: user-log-id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User Log ID
+ *     responses:
+ *       200:
+ *         description: A list of recipe history for the user
+ *       400:
+ *         description: Error in SQL statement
+ */
 router.get('/', async (request, response) => {
     const userLogID = request.headers['user-log-id'];
     const sqlQuery = "SELECT * FROM recipeHistory WHERE userLogID = @userLogID;";
@@ -15,6 +33,35 @@ router.get('/', async (request, response) => {
     }); 
 });
 
+/**
+ * @swagger
+ * /history:
+ *   post:
+ *     summary: Save a new recipe history record for a user
+ *     parameters:
+ *       - in: header
+ *         name: user-log-id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User Log ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: string
+ *               recipe:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Record added successfully
+ *       400:
+ *         description: Error adding the record
+ */
 router.post('/', async (request, response) => {
     const userLogID = request.headers['user-log-id'];
     const recipeID = request.body.id;
@@ -34,6 +81,24 @@ router.post('/', async (request, response) => {
     }); 
 });
 
+/**
+ * @swagger
+ * /history/notUser:
+ *   get:
+ *     summary: Retrieve recipe history for all users except the requesting user
+ *     parameters:
+ *       - in: header
+ *         name: user-log-id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User Log ID
+ *     responses:
+ *       200:
+ *         description: A list of user IDs who have recipe histories
+ *       400:
+ *         description: Error in SQL statement
+ */
 router.get('/notUser', async (request, response) => {
     const userLogID = request.headers['user-log-id'];
     const sqlQuery = "SELECT DISTINCT userLogID FROM recipeHistory WHERE userLogID <> @userLogID;";
@@ -47,6 +112,17 @@ router.get('/notUser', async (request, response) => {
     }); 
 });
 
+/**
+ * @swagger
+ * /history/all:
+ *   get:
+ *     summary: Retrieve all recipe history across all users
+ *     responses:
+ *       200:
+ *         description: A list of all recipe history
+ *       400:
+ *         description: Error in SQL statement
+ */
 router.get('/all', async (request, response) => {
     const sqlQuery = "SELECT * FROM recipeHistory";
     const sqlRequest = dbConnection.request();
