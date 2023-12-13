@@ -161,6 +161,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function displayUserData(userData) {
         if (userData.recordset && userData.recordset.length > 0) {
             const userPrefs = userData.recordset[0];
+            const skillLevel = userPrefs.skillLevel === null ? "Take the Cooking Assessment to discover your expertise and allow our" + 
+            " chatbot to offer recipes suited to your skill level." : userPrefs.skillLevel
             const prefsHtml = `
                 <ul>
                     <li>Vegan: ${userPrefs.isVegan}</li>
@@ -168,6 +170,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <li>Dairy Free: ${userPrefs.isDairyFree}</li>
                     <li>Low Carb: ${userPrefs.isLowCarb}</li>
                     <li>Pescetarian: ${userPrefs.isPescetarian}</li>
+                    <strong>Skill Level:</strong>
+                    <li>${skillLevel}</li>
                 </ul>
             `;
             returningResult.innerHTML = `<strong>Dietary Preferences:</strong> ${prefsHtml}`;

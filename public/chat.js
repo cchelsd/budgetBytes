@@ -99,6 +99,7 @@ async function getUserDietaryMessage() {
     console.log("Current User ID:", currentUserID);
 
     let dietaryMessage = "";
+    let skillMessage = "";
 
     if (currentUserID) {
         const userPrefs = await fetchUserDietaryPreferences(currentUserID);
@@ -119,10 +120,22 @@ async function getUserDietaryMessage() {
            if (userPrefs.isPescetarian === 'true') {
                dietaryMessage += "It is important that you must only give the user Pescetarian Recipe suggestions. You must give pescetarian-version of recipes unless the user specifically says something like 'Give me non-pescetarian recipes'...";
            }
+           if (userPrefs.skillLevel === 'Beginner') {
+                skillMessage += "It is important that you must only give the user beginner-level recipe suggestions. You must give beginner-level recipes unless the user specifically says something like 'Give me advanced level recipes'...";
+           }
+           if (userPrefs.skillLevel === 'Intermediate') {
+                skillMessage += "It is important that you must only give the user intermediate-level recipe suggestions. You must give intermediate-level recipes unless the user specifically says something like 'Give me beginner level recipes'...";
+            }
+            if (userPrefs.skillLevel === 'Advanced') {
+                skillMessage += "It is important that you must only give the user advanced-level recipe suggestions. You must give advanced-level recipes unless the user specifically says something like 'Give me intermediate level recipes'...";
+            }
        }
     }
 
-    return dietaryMessage;
+    const finalMessage = dietaryMessage + skillMessage;
+    console.log(finalMessage);
+
+    return finalMessage;
 }
 
 
@@ -198,9 +211,7 @@ function openAPIConnect(userText) {
 }
 
 function displayRecipe(recipeDetails, d, recipeID) {
-    console.log("Recipe Details:", recipeDetails);
     const lines = recipeDetails.split('\n');
-    console.log(lines);
 
     let ingredients = [];
     let instructions = [];
@@ -222,9 +233,6 @@ function displayRecipe(recipeDetails, d, recipeID) {
         const lines = recipeDetails.split('\n');
         recipeName = lines[0].trim();
     }
-
-    const colonIndex = recipeDetails.indexOf(':', recipeDetails.indexOf('\n') + 1);
-    // const recipeName = recipeDetails.substring(recipeDetails.indexOf('\n') + 1, colonIndex + 1);
 
     lines.forEach(line => {
         line = line.trim();
@@ -254,9 +262,7 @@ function displayRecipe(recipeDetails, d, recipeID) {
     if (instructions.length > 0 && instructions[0].toLowerCase().includes('instructions' || 'directions')) {
         instructions.shift();
     }
-
-    console.log("Ingredients", ingredients);
-    console.log("Instructions", instructions);
+    
     const savedRecipeID = recipeID;
     const userLogID = getCurrentUserID();
 

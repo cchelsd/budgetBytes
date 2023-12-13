@@ -238,12 +238,6 @@ function constructMessage(obj) {
     const name = selectedRecipe.find('.recipe-details > p').text();
     const ingredients = selectedRecipe.data("ingredients").clone();
     const instructions = selectedRecipe.data("instructions").clone();
-    const recipeID = selectedRecipe.data("recipeID");
-    const ingredientsHTML = selectedRecipe.find('#ingredients > li').toArray().map(element => element.outerHTML);
-    const instructionsHTML = selectedRecipe.find('#instructions > li').toArray().map(element => element.outerHTML);
-    console.log(ingredients);
-    console.log(instructions);
-    console.log(instructionsHTML);
     // Update the modal content with the selected recipe details
     $("#recipeName").text(name);
     $("#recipeIngredients").empty().append(ingredients);
@@ -254,8 +248,6 @@ function constructMessage(obj) {
         $("#addCont").append(button);     
         button.on('click', async function() {
             $("#addedMsg").empty();
-            console.log(JSON.stringify({ id: recipeID, recipe: JSON.stringify({name: name, ingredients: ingredientsHTML, instructions: instructions})}));
-            // const result = await handleSave(userID, recipeID, name, ingredients, instructions);
             if (result == null) {
                 $("#addedMsg").append($(`<p>Could not add to saved</p>`));
             } else {
@@ -268,22 +260,6 @@ function constructMessage(obj) {
     $("#recipeInstructions").empty().append(instructions);
     // Show the modal
     $("#recipeModal").modal("show");
-}
-
-async function handleSave(userID, recipeID, recipeName, ingredients, instructions) {
-    try {
-        await fetch(`http://localhost:3001/saved`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'user-log-id': userID
-          },
-          body: JSON.stringify({ id: recipeID, recipe: JSON.stringify({name: recipeName, ingredients: ingredients, instructions: instructions})})
-        });
-        return "success";
-    } catch (error) {
-        return null;
-    }
 }
 
 $(document).ready(function() {

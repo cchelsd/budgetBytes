@@ -1,17 +1,12 @@
 const express = require('express');
 const router = express.Router();
-
+const dbConnection = require("../config");
 router.use(express.json());
-
-
-// In-memory storage for quiz results
-let quizResults = [];
-
 
 /**
  * @swagger
  * /quiz:
- *   post:
+ *   put:
  *     summary: Submit quiz answers and get skill level
  *     tags: [QuizAssessment]
  *     parameters:
@@ -54,7 +49,7 @@ router.put('/:userID', (req, res) => {
     const userAnswers = req.body.userAnswers;
 
     // Calculate total score
-    const totalScore = userAnswers.reduce((acc, val) => acc + val, 0);
+    const totalScore = (userAnswers.userAnswers).reduce((acc, val) => acc + val, 0);
 
     // Determine skill level based on the total score
     let skillLevel;
@@ -71,11 +66,9 @@ router.put('/:userID', (req, res) => {
     sqlRequest.input('skillLevel', skillLevel);
     sqlRequest.query(sqlQuery, (err, result) => {
         if (err) {
-            console.log(err);
-            return response.status(400).json({ Error: "Skill level was not updated." });
+            return res.status(400).json({ Error: "Skill level was not updated." });
         } else {
-            console.log("OK");
-            return response.status(200).json({ Success: "Skill level was updated!" });
+            return res.status(200).json({ SkillLevel: skillLevel });
         }
     });
     

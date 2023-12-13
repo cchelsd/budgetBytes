@@ -123,23 +123,23 @@ async function displayRecipeCards(recipes) {
         recipeCard.append(recipeDetails);
         content.append(recipeCard);
     });
-    $('.recipeCards').append(content);
-    // Create and append the "Save Meal Plan" button
-    const saveButton = $('<button>', {
-        text: 'Save Meal Plan',
-        class: 'btn btn-primary',
-        id: 'saveMeal',
-        click: async () => {
-            try {
-                saveButton.prop('disabled', true);
-                alert('Meal plan saved successfully!');
-            } catch (error) {
-                console.error('Error saving meal plan:', error);
-                alert('Failed to save meal plan.');
-            }
+
+    // Check if there are fewer recipes than days of the week
+    const remainingDays = 7 - recipes.length;
+    if (remainingDays > 0) {
+        for (let i = 0; i < remainingDays; i++) {
+            const emptyRecipeCard = $("<div>").addClass("recipe-card empty-card");
+            const overlay = $("<div>", {class: "overlay"});
+            const overlayText = $("<div>", {class: "overlay-text"});
+            overlayText.append(`<h3>${daysOfWeek[recipes.length + i]}</h3>`);
+            overlayText.append(`<h3>Not enough recipes found</h3>`);
+            overlay.append(overlayText);
+            emptyRecipeCard.append(overlay);
+            content.append(emptyRecipeCard);
         }
-    });
-    $('.recipeCards').append(saveButton);
+    }
+
+    $('.recipeCards').append(content);
 }
 
 
@@ -157,10 +157,6 @@ async function displayRecipeCards(recipes) {
     $("#recipeInstructions").empty().append(instructions);
     // Show the modal
     $("#recipeModal").modal("show");
-}
-
-async function saveMealPlan() {
-
 }
 
 $(document).ready(async function() {
