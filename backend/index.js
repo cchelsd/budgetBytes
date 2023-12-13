@@ -2,6 +2,8 @@
 // retrieve necessary files
 const express = require("express");
 const cors = require("cors");
+const swaggerJSdoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 const favoriteRoutes = require("./routes/favoriteRoutes");
 const userRoutes = require("./routes/userRoutes");
 const savedRoutes = require("./routes/savedRoutes");
@@ -12,11 +14,9 @@ const mealPlanRoutes = require("./routes/mealPlanRoutes");
 const groceryRoutes = require("./routes/groceryRoutes");
 const assessmentRoutes = require("./routes/assessmentRoutes");
 const storeRoutes = require("./routes/groceryStoreRoutes");
-const swaggerJSDoc = require("swagger-jsdoc");
-const swaggerUi = require("swagger-ui-express");
 const port = 3001;
 
-// var bodyParser = require('body-parser');
+var bodyParser = require('body-parser');
 
 // // ----------------------------------------------
 // // (A)  Create an express application instance
@@ -42,29 +42,28 @@ app.use(cors());
 // Define Swagger JSDoc configuration
 // ----------------------------------------------
 const swaggerOptions = {
-    swaggerDefinition: {
+  definition: {
+      openapi: '3.0.0',
       info: {
-        title: "Budget Bytes",
-        version: "1.0.0",
-        description: "API documentation for your Express.js application",
+          title: 'Budget Bytes',
+          description: 'A recipe chatbot that offers simple and affordable recipes tailored for college students',
+          servers: [`http://localhost:${port}`]
       },
-      servers: [`http://localhost:${port}`],
-    },
-    apis: ["./backend/**/*.js"], // Path to the API routes
+  },
+  apis: ['./backend/routes/**/*.js'], // Path to the files containing your API routes
 };
 
 // ----------------------------------------------
 // Initialize Swagger JSDoc
 // ----------------------------------------------
-const swaggerSpec = swaggerJSDoc(swaggerOptions);
+const swaggerDocs = swaggerJSdoc(swaggerOptions);
 
 // ----------------------------------------------
 // Serve Swagger documentation
 // ----------------------------------------------
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-
-// app.use(bodyParser.json());
+app.use(bodyParser.json());
 
 // // ----------------------------------------------
 // // Use the defined routes for services 1 and 2
