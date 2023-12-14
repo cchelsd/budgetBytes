@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userData = require('../userDatabase');
 
+
 /**
  * @swagger
  * /:
@@ -53,6 +54,44 @@ router.post('/', async (req, res) => {
   }
 });
 
+
+/**
+ * @swagger
+ * /getUsers:
+ *   get:
+ *     summary: Retrieve a list of all users
+ *     description: Returns a list of users from the database
+ *     responses:
+ *       200:
+ *         description: A list of users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   userLogID:
+ *                     type: string
+ *                     description: The unique identifier for the user
+ *                   isVegan:
+ *                     type: string
+ *                     description: Indicates if the user is vegan
+ *                   isVegetarian:
+ *                     type: string
+ *                     description: Indicates if the user is vegetarian
+ *                   isDairyFree:
+ *                     type: string
+ *                     description: Indicates if the user is dairy-free
+ *                   isLowCarb:
+ *                     type: string
+ *                     description: Indicates if the user follows a low-carb diet
+ *                   isPescetarian:
+ *                     type: string
+ *                     description: Indicates if the user is pescetarian
+ *       500:
+ *         description: Server error
+ */
 router.get('/getUsers', async (_, res) => {
     try {
       // Return a list of persons

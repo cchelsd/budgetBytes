@@ -15,7 +15,7 @@ const storeRoutes = require("./routes/groceryStoreRoutes");
 const foodParserRouter = require('./routes/foodParserRoutes');
 const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
-const port = 3001;
+const port = 3000;
 
 // var bodyParser = require('body-parser');
 
@@ -51,7 +51,7 @@ const swaggerOptions = {
       },
       servers: [`http://localhost:${port}`],
     },
-    apis: ["./backend/**/*.js"], // Path to the API routes
+    apis: ["./backend/routes/*.js"], // Path to the API routes
 };
 
 // ----------------------------------------------
