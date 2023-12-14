@@ -4,21 +4,70 @@ const dbConnection = require("../config");
 
 /**
  * @swagger
- * /favorites:
+ * components:
+ *   responses:
+ *     '200': 
+ *       description: Successful response user's favorite recipes
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userLogID:
+ *                 type: string
+ *                 description: The user's ID (log in)
+ *               recipeID:
+ *                 type: string
+ *                 description: The unique recipe ID
+ *               recipe:
+ *                 type: object
+ *                 description: The recipe details including the name, ingredients, and instructions
+ *     '400':
+ *       description: Error fetching favorite recipes.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Error:
+ *                 type: string
+ *                 description: Error message indicating error in the sql database
+ *             example:
+ *               Error: "Error in the SQL statement. Please check."
+ *     '400Pref':
+ *       description: Recipes could not be found for user.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               message:
+ *                 type: string
+ *                 description: Message for recipes (of user's prefernences) not being found
+ *             example:
+ *               message: "Recipes of other Budget Bytes users with your dietary preferences were not found."
+ */
+
+/**
+ * @swagger
+ * /favorite:
  *   get:
+ *     tags:
+ *       - Favorite Recipes
  *     summary: Retrieve all favorite recipes for a specific user
  *     parameters:
  *       - in: header
  *         name: user-log-id
+ *         required: true
  *         schema:
  *           type: string
- *         required: true
- *         description: User Log ID
+ *           example: 1332
+ *         description: ID of the user
  *     responses:
- *       200:
- *         description: List of favorite recipes for the user
- *       400:
- *         description: Error in SQL statement
+ *       '200':
+ *         $ref: '#/components/responses/200'
+ *       '400':
+ *         $ref: '#/components/responses/400'
  */
 router.get('/', async (request, response) => {
     const userLogID = request.headers['user-log-id'];
@@ -27,29 +76,34 @@ router.get('/', async (request, response) => {
     sqlRequest.input('userLogID', userLogID);
     sqlRequest.query(sqlQuery, (err, result) => {
     if (err) {
+        console.log(err);
         return response.status(400).json({Error: "Error in the SQL statement. Please check."});
     }
+    // response.setHeader('X-Faves-Of', userLogID);
     return response.status(200).json(parseRecipeJSON(result));
     }); 
 });
 
 /**
  * @swagger
- * /favorites/all:
+ * /favorite/all:
  *   get:
+ *     tags:
+ *       - Favorite Recipes
  *     summary: Retrieve all favorite recipes across all users
  *     parameters:
  *       - in: header
  *         name: user-log-id
+ *         required: true
  *         schema:
  *           type: string
- *         required: true
- *         description: User Log ID
+ *           example: 1332
+ *         description: ID of the user
  *     responses:
- *       200:
- *         description: List of all favorite recipes
- *       400:
- *         description: Error in SQL statement
+ *       '200':
+ *         $ref: '#/components/responses/200'
+ *       '400':
+ *         $ref: '#/components/responses/400'
  */
 router.get('/all', async (request, response) => {
     const userLogID = request.headers['user-log-id'];
@@ -60,27 +114,29 @@ router.get('/all', async (request, response) => {
     if (err) {
         return response.status(400).json({Error: "Error in the SQL statement. Please check."});
     }
+    response.setHeader('X-Faves-All', 'every users faves');
     return response.status(200).json(parseRecipeJSON(result));
     }); 
 });
 
 /**
  * @swagger
- * /favorites/notUser:
+ * /favorite/notUser:
  *   get:
+ *     tags:
+ *       - Favorite Recipes
  *     summary: Retrieve user IDs of all users except the requesting user from favorites
  *     parameters:
  *       - in: header
  *         name: user-log-id
+ *         required: true
  *         schema:
  *           type: string
- *         required: true
- *         description: User Log ID
+ *           example: 1332
+ *         description: ID of the user
  *     responses:
  *       200:
  *         description: List of user IDs from favorites
- *       400:
- *         description: Error in SQL statement
  */
 router.get('/notUser', async (request, response) => {
     const userLogID = request.headers['user-log-id'];
@@ -91,22 +147,26 @@ router.get('/notUser', async (request, response) => {
     if (err) {
         return response.status(400).json({Error: "Error in the SQL statement. Please check."});
     }
+    response.setHeader('X-Exclude-Faves-ID', userLogID);
     return response.status(200).json(result);
     }); 
 });
 
 /**
  * @swagger
- * /favorites:
+ * /favorite:
  *   post:
  *     summary: Add a new favorite recipe for a user
+ *     tags:
+ *       - Favorite Recipes
  *     parameters:
  *       - in: header
  *         name: user-log-id
+ *         required: true
  *         schema:
  *           type: string
- *         required: true
- *         description: User Log ID
+ *           example: 1332
+ *         description: ID of the user
  *     requestBody:
  *       required: true
  *       content:
@@ -116,8 +176,10 @@ router.get('/notUser', async (request, response) => {
  *             properties:
  *               id:
  *                 type: string
+ *                 description: Recipe ID
  *               recipe:
- *                 type: string
+ *                 type: object
+ *                 description: Recipe object including recipe details
  *     responses:
  *       200:
  *         description: Favorite recipe added successfully
@@ -133,6 +195,7 @@ router.post('/', async (request, response) => {
     sqlRequest.input('userLogID', userLogID);
     sqlRequest.input('recipeID', recipeID);
     sqlRequest.input('recipe', recipe);
+    response.setHeader('X-Add-Fave', recipeID);
     sqlRequest.query(sqlQuery, (err, result) => {
         if (err) {
             return response.status(400).json({ Error: "Record was not added." });
@@ -144,9 +207,11 @@ router.post('/', async (request, response) => {
 
 /**
  * @swagger
- * /favorites/{id}:
+ * /favorite/{id}:
  *   delete:
  *     summary: Delete a favorite recipe
+ *     tags:
+ *       - Favorite Recipes
  *     parameters:
  *       - in: path
  *         name: id
@@ -154,12 +219,7 @@ router.post('/', async (request, response) => {
  *           type: string
  *         required: true
  *         description: Recipe ID
- *       - in: header
- *         name: user-log-id
- *         schema:
- *           type: string
- *         required: true
- *         description: User Log ID
+ *       - $ref: '#/components/parameters/userID'
  *     responses:
  *       200:
  *         description: Favorite recipe deleted successfully
@@ -173,6 +233,7 @@ router.delete('/:id', async (request, response) => {
     const sqlRequest = dbConnection.request();
     sqlRequest.input('userLogID', userLogID);
     sqlRequest.input('recipeID', recipeID);
+    response.setHeader('X-Delete-Fave', recipeID);
     sqlRequest.query(sqlQuery, (err, result) => {
         if (err) {
             return response.status(400).json({ Error: "Record was not deleded." });

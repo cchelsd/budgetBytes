@@ -7,6 +7,8 @@ const dbConnection = require("../config");
  * /history:
  *   get:
  *     summary: Retrieve all recipe history for a specific user
+ *     tags:
+ *       - Recipe History
  *     parameters:
  *       - in: header
  *         name: user-log-id
@@ -38,6 +40,8 @@ router.get('/', async (request, response) => {
  * /history:
  *   post:
  *     summary: Save a new recipe history record for a user
+ *     tags:
+ *       - Recipe History
  *     parameters:
  *       - in: header
  *         name: user-log-id
@@ -85,6 +89,8 @@ router.post('/', async (request, response) => {
  * /history/notUser:
  *   get:
  *     summary: Retrieve recipe history for all users except the requesting user
+ *     tags:
+ *       - Recipe History
  *     parameters:
  *       - in: header
  *         name: user-log-id
@@ -116,6 +122,8 @@ router.get('/notUser', async (request, response) => {
  * /history/all:
  *   get:
  *     summary: Retrieve all recipe history across all users
+ *     tags:
+ *       - Recipe History
  *     responses:
  *       200:
  *         description: A list of all recipe history

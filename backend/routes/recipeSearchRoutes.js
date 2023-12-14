@@ -9,8 +9,9 @@ router.use(cors());
  * @swagger
  * /search:
  *   post:
- *     summary: Get word count
- *     tags: [WordCount]
+ *     summary: Search for occurences of a word in a recipe
+ *     tags: 
+ *       - Recipe Search
  *     parameters:
  *       - name: recipe
  *         in: body

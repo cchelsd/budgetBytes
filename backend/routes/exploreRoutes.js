@@ -42,6 +42,7 @@ router.get('/:userID', async (request, response) => {
     if (resultArr.length === 0) {
         return response.status(400).json({message: "Recipes of other Budget Bytes users with your dietary preferences were not found."});
     }
+    response.setHeader('X-Explore-History', userLogID);
     return response.status(200).json(resultArr);
 });
 
@@ -83,6 +84,7 @@ router.get('/favorites/:userID', async (request, response) => {
     if (resultArr.length === 0) {
         return response.status(400).json({message: "Favorite recipes of other Budget Bytes users with your dietary preferences were not found."});
     }
+    response.setHeader('X-Explore-Favorites', userLogID);
     return response.status(200).json(resultArr);
 });
 
