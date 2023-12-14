@@ -8,7 +8,8 @@ router.use(express.json());
  * /quiz:
  *   put:
  *     summary: Submit quiz answers and get skill level
- *     tags: [QuizAssessment]
+ *     tags:
+ *       - Cooking Assessment
  *     parameters:
  *       - name: userAnswers
  *         in: body

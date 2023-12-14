@@ -6,6 +6,8 @@ const dbConnection = require("../config");
  * @swagger
  * /grocery/getLists:
  *   get:
+ *     tags:
+ *       - Grocery List
  *     summary: Retrieve all users' grocery lists
  *     responses:
  *       200:
@@ -28,6 +30,8 @@ router.get('/getLists', async (_, res) => {
  * @swagger
  * /grocery/create:
  *   post:
+ *     tags:
+ *       - Grocery List
  *     summary: Create a new grocery list
  *     requestBody:
  *       required: true
@@ -62,6 +66,8 @@ router.post('/create', async (req, res) => {
  * /grocery/{userLogID}:
  *   post:
  *     summary: Add an item to a user's grocery list
+ *     tags:
+ *       - Grocery List
  *     parameters:
  *       - in: path
  *         name: userLogID
@@ -107,6 +113,8 @@ router.post('/:userLogID', async (req, res) => {
  * @swagger
  * /grocery/{userLogID}:
  *   get:
+ *     tags:
+ *       - Grocery List
  *     summary: Retrieve a grocery list by User Log ID
  *     parameters:
  *       - in: path
@@ -139,30 +147,12 @@ router.get('/:userLogID', async (req, res) => {
 });
 
 /**
- * Double? ** scroll up **
- */
-// router.post('/:userLogID', async (req, res) => {
-//   const userLogID = req.params.userLogID;
-//   const itemName = req.body.itemName;
-//   const itemQuantity = req.body.itemQuantity;
-//   const sqlQuery = 'INSERT INTO GroceryLists (userLogID, itemName, itemQuantity) VALUES (@userLogID, @itemName, @itemQuantity)';
-//   const sqlRequest = dbConnection.request();
-//   sqlRequest.input('userLogID', userLogID);
-//   sqlRequest.input('itemName', itemName);
-//   sqlRequest.input('itemQuantity', itemQuantity);
-//   sqlRequest.query(sqlQuery, (err, result) => {
-//     if (err) {
-//         return res.status(500).json({ error: err?.message });
-//     }
-//     return res.status(201).json(result);
-//   }); 
-// });
-
-/**
  * @swagger
  * /grocery/{userLogID}:
  *   put:
  *     summary: Update quantity of an item in the grocery list
+ *     tags:
+ *       - Grocery List
  *     parameters:
  *       - in: path
  *         name: userLogID
@@ -210,6 +200,8 @@ router.put('/:userLogID', async (req, res) => {
  * /grocery/{userLogID}/{itemName}:
  *   delete:
  *     summary: Remove an item from the user's grocery list
+ *     tags:
+ *       - Grocery List
  *     parameters:
  *       - in: path
  *         name: userLogID
@@ -245,6 +237,8 @@ router.delete('/:userLogID/:itemName', async (req, res) => {
  * /grocery/{userLogID}:
  *   delete:
  *     summary: Delete the entire grocery list of a user
+ *     tags:
+ *       - Grocery List
  *     parameters:
  *       - in: path
  *         name: userLogID

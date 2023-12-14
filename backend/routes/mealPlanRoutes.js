@@ -24,13 +24,13 @@ let notFound = false;
  *             type: object
  *             properties:
  *               userLogID:
- *                 type: varchar(4)
+ *                 type: string
  *                 description: The user's ID (log in)
  *               recipeID:
- *                 type: varchar(20)
+ *                 type: string
  *                 description: The unique recipe ID
  *               recipe:
- *                 type: nvarchar(max)
+ *                 type: object
  *                 description: The recipe details including the name, ingredients, and instructions
  *           example:
  *             - - userLogID: "1332"

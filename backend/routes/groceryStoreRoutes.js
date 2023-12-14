@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-// Define an API endpoint to fetch coordinates from Google Geocoding API
 router.get('/:address', async (req, res) => {
   const address = req.params.address;
   const OPENCAGE_GEOCODING_API_KEY = '0ade0ea9cd23417480b5240558db5f48';

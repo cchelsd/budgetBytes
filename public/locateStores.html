@@ -159,6 +159,8 @@
           center: mapData.center,
           zoom: 13,
         });
+          // Initialize InfoWindow
+          const infoWindow = new google.maps.InfoWindow();
 
         // Add markers to the map
         mapData.markers.forEach(markerData => {
@@ -167,7 +169,14 @@
             map: map,
             title: markerData.title,
           });
+          // Add click event listener to the marker
+          marker.addListener('click', () => {
+              // Set the content of the InfoWindow
+              infoWindow.setContent(markerData.title);
 
+              // Open the InfoWindow at the marker's position
+              infoWindow.open(map, marker);
+          });
         });
       }
     </script>

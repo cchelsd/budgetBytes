@@ -7,6 +7,8 @@ const dbConnection = require("../config");
  * /saved:
  *   get:
  *     summary: Retrieve all saved recipes for a user
+ *     tags:
+ *       - Saved Recipes
  *     parameters:
  *       - in: header
  *         name: user-log-id
@@ -39,6 +41,8 @@ router.get('/', async (request, response) => {
  * /saved:
  *   post:
  *     summary: Save a new recipe for a user
+ *     tags:
+ *       - Saved Recipes
  *     parameters:
  *       - in: header
  *         name: user-log-id
@@ -86,6 +90,8 @@ router.post('/', async (request, response) => {
  * /saved/collections:
  *   get:
  *     summary: Retrieve collections of saved recipes for a user
+ *     tags:
+ *       - Saved Recipes
  *     parameters:
  *       - in: header
  *         name: user-log-id
@@ -118,6 +124,8 @@ router.get('/collections', async (request, response) => {
  * /saved/collections/{collection}:
  *   get:
  *     summary: Retrieve saved recipes by collection for a user
+ *     tags:
+ *       - Saved Recipes
  *     parameters:
  *       - in: path
  *         name: collection
@@ -157,6 +165,8 @@ router.get('/collections/:collection', async (request, response) => {
  * /saved/collections/collection/{recipeID}:
  *   put:
  *     summary: Update the collection of a saved recipe
+ *     tags:
+ *       - Saved Recipes
  *     parameters:
  *       - in: path
  *         name: recipeID
@@ -210,6 +220,8 @@ router.put('/collections/collection/:recipeID', async (request, response) => {
  * /saved/recipe/{recipeID}:
  *   delete:
  *     summary: Delete a saved recipe
+ *     tags:
+ *       - Saved Recipes
  *     parameters:
  *       - in: path
  *         name: recipeID

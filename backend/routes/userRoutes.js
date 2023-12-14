@@ -8,6 +8,8 @@ const userData = require('../userDatabase');
  * /:
  *   post:
  *     summary: Create a new user
+ *     tags:
+ *       - User
  *     requestBody:
  *       required: true
  *       content:
@@ -60,6 +62,8 @@ router.post('/', async (req, res) => {
  * /getUsers:
  *   get:
  *     summary: Retrieve a list of all users
+ *     tags:
+ *       - User
  *     description: Returns a list of users from the database
  *     responses:
  *       200:
@@ -108,6 +112,8 @@ router.get('/getUsers', async (_, res) => {
  * /{userLogID}:
  *   get:
  *     summary: Get user by userLogID
+ *     tags:
+ *       - User
  *     parameters:
  *       - in: path
  *         name: userLogID
@@ -149,6 +155,8 @@ router.get('/:userLogID', async (req, res) => {
  * /{userLogID}:
  *   put:
  *     summary: Update user preferences
+ *     tags:
+ *       - User
  *     parameters:
  *       - in: path
  *         name: userLogID
@@ -187,6 +195,8 @@ router.put('/:userLogID', async (req, res) => {
  * /{userLogID}:
  *   delete:
  *     summary: Delete a user
+ *     tags:
+ *       - User
  *     parameters:
  *       - in: path
  *         name: userLogID

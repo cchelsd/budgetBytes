@@ -9,7 +9,7 @@ const userRoutes = require("./routes/userRoutes");
 const savedRoutes = require("./routes/savedRoutes");
 const historyRoutes = require("./routes/historyRoutes");
 const exploreRoutes = require("./routes/exploreRoutes");
-const wordCountRoutes = require("./routes/wordSearchRoutes");
+const wordCountRoutes = require("./routes/recipeSearchRoutes");
 const mealPlanRoutes = require("./routes/mealPlanRoutes");
 const groceryRoutes = require("./routes/groceryRoutes");
 const assessmentRoutes = require("./routes/assessmentRoutes");
@@ -46,7 +46,7 @@ const swaggerOptions = {
       openapi: '3.0.0',
       info: {
           title: 'Budget Bytes',
-          description: 'A recipe chatbot that offers simple and affordable recipes tailored for college students',
+          description: 'A recipe chatbot that offers simple and affordable recipes tailored for college students.',
           servers: [`http://localhost:${port}`]
       },
   },
@@ -63,7 +63,7 @@ const swaggerDocs = swaggerJSdoc(swaggerOptions);
 // ----------------------------------------------
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
 // // ----------------------------------------------
 // // Use the defined routes for services 1 and 2
