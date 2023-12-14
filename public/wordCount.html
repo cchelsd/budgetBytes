@@ -60,7 +60,7 @@
         <main class="word-search">
             <div class="container mt-5">
                 <!-- Title for the Recipe Word Search section -->
-                <h1 class="mb-4">Recipe Word Search</h1>
+                <h1 class="mb-4">Ingredient Word Search</h1>
 
                 <!-- Form for user input -->
                 <form id="searchForm">
@@ -73,9 +73,9 @@
 
                     <!-- Input field for entering the search word -->
                     <div class="form-group">
-                        <label for="searchWord">Search Word:</label>
+                        <label for="searchWord">Ingredient Search:</label>
                         <input type="text" class="form-control" id="searchWord" name="searchWord"
-                            placeholder="Enter a word to search from recipe">
+                            placeholder="Enter an Ingredient to search from recipe">
                     </div>
 
                     <!-- Button to trigger the search -->
@@ -176,19 +176,17 @@
                 return text.replace(regex, match => `<span class="highlight">${match}</span>`);
             }
 
-            // Function to submit the food parsing request
             async function parseFood() {
-                const recipeTextarea = document.getElementById('recipe');
+                const searchWord = document.getElementById('searchWord').value;
 
                 try {
                     // Fetch data from your local server's /food-parser endpoint using a GET request
-                    const response = await fetch(`http://localhost:3001/food-parser?ingr=${encodeURIComponent(recipeTextarea.value)}`, {
+                    const response = await fetch(`http://localhost:3001/food-parser?ingr=${encodeURIComponent(searchWord)}`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
                         },
                     });
-
                     // Parse the JSON response
                     const data = await response.json();
 
