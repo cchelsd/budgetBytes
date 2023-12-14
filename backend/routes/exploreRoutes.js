@@ -1,11 +1,29 @@
 const express = require("express");
 const router = express.Router();
-const dbConnection = require("../config");
 let usersData = [];
 let validIDs = [];
 let recipes = [];
 let resultArr = [];
 
+/**
+ * @swagger
+ * /{userID}:
+ *   get:
+ *     summary: Retrieve recipes from other users that comply with a specific user's dietary preferences
+ *     tags: [Explore]
+ *     parameters:
+ *       - in: path
+ *         name: userID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User Log ID
+ *     responses:
+ *       200:
+ *         description: Recipes from other users that comply with the user's preferences were returned
+ *       400:
+ *         description: Recipes from other users that comply with the user's preferences were not found
+ */
 router.get('/:userID', async (request, response) => {
     usersData = [];
     validIDs = [];
@@ -27,6 +45,26 @@ router.get('/:userID', async (request, response) => {
     return response.status(200).json(resultArr);
 });
 
+
+/**
+ * @swagger
+ * /favorites/{userID}:
+ *   get:
+ *     summary: Retrieve favorite recipes from other users that comply with a specific user's dietary preferences 
+ *     tags: [Explore]
+ *     parameters:
+ *       - in: path
+ *         name: userID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User Log ID
+ *     responses:
+ *       200:
+ *         description: Favorite recipes from other users that comply with the user's preferences were returned
+ *       400:
+ *         description: Favorite recipes from other users that comply with the user's preferences were not found
+ */
 router.get('/favorites/:userID', async (request, response) => {
     usersData = [];
     validIDs = [];
@@ -37,7 +75,6 @@ router.get('/favorites/:userID', async (request, response) => {
     for (const validID of validIDs) {
         await fetchFavorites(validID);
     }
-    console.log("Valid IDs:", validIDs);
     for (const innerArray of recipes) {
         for (const recipeObj of innerArray) {
             resultArr.push(recipeObj);
@@ -77,7 +114,6 @@ async function findSimilarUsers(userID, table) {
 }
 
 async function getUserPreferences(userID) {
-    console.log(userID);
     const response = await fetch(`http://localhost:3001/user/${userID}`, {
         method: 'GET',
         headers: {
@@ -88,7 +124,7 @@ async function getUserPreferences(userID) {
 }
 
 function comparePreferences(obj1, obj2) {
-    const keys = Object.keys(obj1);
+    const keys = Object.keys(obj1).slice(0, 5);
     let isValid = true;
     keys.forEach(key => {
         if (obj1[key] === 'true' && obj2[key] !== 'true') {
@@ -102,7 +138,6 @@ function comparePreferences(obj1, obj2) {
 }
 
 async function fetchRecipeHistory(userID) {
-    console.log("Fetching History", userID)
     const response = await fetch(`http://localhost:3001/history`, {
         method: 'GET',
         headers: {
@@ -112,7 +147,6 @@ async function fetchRecipeHistory(userID) {
     });
     const history = await response.json();   
     const recipeHistory = history[0]; 
-    console.log("recipes", recipeHistory);
     recipes.push(recipeHistory);
 }
 

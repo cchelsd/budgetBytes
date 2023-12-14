@@ -194,7 +194,6 @@ router.put('/collections/collection/:recipeID', async (request, response) => {
     sqlRequest.input('userLogID', userLogID);
     sqlRequest.input('collection', collection);
     sqlRequest.input('recipeID', recipeID);
-    console.log(sqlRequest);
     sqlRequest.query(sqlQuery, (err, result) => {
         if (err) {
             console.log(err);

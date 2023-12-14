@@ -12,6 +12,7 @@ const mealPlanRoutes = require("./routes/mealPlanRoutes");
 const groceryRoutes = require("./routes/groceryRoutes");
 const assessmentRoutes = require("./routes/assessmentRoutes");
 const storeRoutes = require("./routes/groceryStoreRoutes");
+const foodParserRouter = require('./routes/foodParserRoutes');
 const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const port = 3000;
@@ -80,6 +81,7 @@ app.use('/mealplan', mealPlanRoutes);
 app.use('/explore', exploreRoutes);
 app.use('/assess', assessmentRoutes);
 app.use('/stores', storeRoutes);
+app.use('/food-parser', foodParserRouter);
 
 app.listen(port, () => {
     console.log(`Express server is running and listening on port ${port}`);

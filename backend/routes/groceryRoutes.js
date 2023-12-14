@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const dbConnection = require("../config");
-const groceryData = require('../groceryDatabase');
 
 /**
  * @swagger
