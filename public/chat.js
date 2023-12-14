@@ -390,9 +390,3 @@ async function addToHistory(recipeID, userLogID, recipeName, ingredients, instru
         console.log('Error:', error);
     }
 }
-
-
-//deleted
-window.addEventListener('unload', function (event) {
-    localStorage.setItem('currentUserLogID', "");
-});

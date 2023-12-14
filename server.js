@@ -2,8 +2,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-// const port = 3000; // old
-const port = 3001;
+const port = 3000;
 
 app.use(express.static(path.join(__dirname, 'public')));
 
