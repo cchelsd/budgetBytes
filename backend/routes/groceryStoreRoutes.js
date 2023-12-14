@@ -18,8 +18,16 @@ const router = express.Router();
  *     responses:
  *       404:
  *         description: No coordinates were found for the given address
+ *         content:
+ *           application/json:
+ *            example:
+ *              error: "No results found for the entered address."
  *       500:
  *         description: Internal error
+ *         content:
+ *           application/json:
+ *            example:
+ *              error: "No results found for the entered address."
  */
 // Define an API endpoint to fetch coordinates from Google Geocoding API
 router.get('/:address', async (req, res) => {
@@ -67,6 +75,10 @@ router.get('/:address', async (req, res) => {
  *     responses:
  *       500:
  *         description: Internal error
+ *         content:
+ *           application/json:
+ *            example:
+ *              error: "Internal server error."
  */
 router.get('/mapdata/:latitude/:longitude', async (req, res) => {
     const { latitude, longitude } = req.params;

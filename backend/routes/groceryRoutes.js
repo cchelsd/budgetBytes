@@ -10,8 +10,21 @@ const dbConnection = require("../config");
  *     responses:
  *       200:
  *         description: List of all grocery lists
+ *         content:
+ *           application/json:
+ *            example:
+ *              result:
+ *                userLogID: 1234
+ *                itemName: carrots 
+ *                itemQuantity: 12
+ *                
  *       400:
  *         description: Error in SQL statement
+ *         content:
+ *           application/json:
+ *            example:
+ *              error: "Error in the SQL statement. Please check."
+ *        
  */
 router.get('/getLists', async (_, res) => {
   const sqlQuery = 'SELECT * FROM GroceryLists';
@@ -38,11 +51,21 @@ router.get('/getLists', async (_, res) => {
  *             properties:
  *               userLogID:
  *                 type: string
+ *           example:
+ *            userLogID: "1234"
  *     responses:
  *       200:
- *         description: Successfully created a grocery list
+ *          description: Successfully created a grocery list
+ *          content: 
+ *            application/json:
+ *             example: 
+ *               Success: "Successfully created a grocery list for user!"
  *       500:
- *         description: Error creating the grocery list
+ *          description: Error creating the grocery list
+ *          content: 
+ *            application/json:
+ *             example: 
+ *               erorr: "Error creating grocery list."
  */
 router.post('/create', async (req, res) => {
   const userLogID = req.body.userLogID;
@@ -80,11 +103,25 @@ router.post('/create', async (req, res) => {
  *                 type: string
  *               itemQuantity:
  *                 type: integer
+ *           example:
+ *            itemName: "carrots"
+ *            itemQuantity: 4
  *     responses:
  *       200:
  *         description: Item added to the grocery list
+ *         content: 
+ *           application/json:
+ *            example:
+ *              result:
+ *                userLogID: 1010
+ *                itemName: apples 
+ *                itemQuantity: 6
  *       500:
  *         description: Error adding the item
+ *         content: 
+ *           application/json:
+ *            example: 
+ *              erorr: "Error adding item to grocery list."
  */
 router.post('/:userLogID', async (req, res) => {
     const userLogID = req.params.userLogID;
@@ -115,13 +152,30 @@ router.post('/:userLogID', async (req, res) => {
  *           type: string
  *         required: true
  *         description: User Log ID
+ *         example:
+ *          userLogID: 1010
  *     responses:
  *       200:
  *         description: Grocery list of the user
+ *         content: 
+ *           application/json:
+ *            example:
+ *              result:
+ *                userLogID: 1332
+ *                itemName: celery 
+ *                itemQuantity: 2
  *       404:
- *         description: User does not have a grocery list
+ *         description: The user does not have a grocery list
+ *         content: 
+ *           application/json:
+ *            example: 
+ *              message: "User does not have a grocery list"
  *       500:
  *         description: Error fetching the grocery list
+ *         content: 
+ *           application/json:
+ *            example: 
+ *              error: "Error fetching the user's grocery list"
  */
 router.get('/:userLogID', async (req, res) => { 
   const userLogID = req.params.userLogID;
@@ -130,33 +184,13 @@ router.get('/:userLogID', async (req, res) => {
   sqlRequest.input('userLogID', userLogID);
   sqlRequest.query(sqlQuery, (err, result) => {
     if ((result.rowsAffected)[0] == 0) {
-      return res.status(404).json({ message: 'User\'s does not have a grocery list' })
+      return res.status(404).json({ message: 'User does not have a grocery list' })
     } else if (err) {
       return res.status(500).json({ error: err?.message });   
     }
     return res.status(200).json(result);
   }); 
 });
-
-/**
- * Double? ** scroll up **
- */
-// router.post('/:userLogID', async (req, res) => {
-//   const userLogID = req.params.userLogID;
-//   const itemName = req.body.itemName;
-//   const itemQuantity = req.body.itemQuantity;
-//   const sqlQuery = 'INSERT INTO GroceryLists (userLogID, itemName, itemQuantity) VALUES (@userLogID, @itemName, @itemQuantity)';
-//   const sqlRequest = dbConnection.request();
-//   sqlRequest.input('userLogID', userLogID);
-//   sqlRequest.input('itemName', itemName);
-//   sqlRequest.input('itemQuantity', itemQuantity);
-//   sqlRequest.query(sqlQuery, (err, result) => {
-//     if (err) {
-//         return res.status(500).json({ error: err?.message });
-//     }
-//     return res.status(201).json(result);
-//   }); 
-// });
 
 /**
  * @swagger
@@ -170,6 +204,8 @@ router.get('/:userLogID', async (req, res) => {
  *           type: string
  *         required: true
  *         description: User Log ID
+ *         example:
+ *          userLogID: 1332
  *     requestBody:
  *       required: true
  *       content:
@@ -183,9 +219,17 @@ router.get('/:userLogID', async (req, res) => {
  *                 type: integer
  *     responses:
  *       200:
- *         description: Item quantity updated
+ *          description: Item quantity updated
+ *          content: 
+ *            application/json:
+ *             example: 
+ *               Success: "Item was updated!"
  *       500:
- *         description: Error updating the item
+ *          description: Error updating the item
+ *          content: 
+ *            application/json:
+ *             example: 
+ *               erorr: "Error updating item in grocery list."
  */
 // Update quantity of an item
 router.put('/:userLogID', async (req, res) => {
@@ -219,11 +263,22 @@ router.put('/:userLogID', async (req, res) => {
  *         name: itemName
  *         schema:
  *           type: string
+ *         example:
+ *          userLogID: 1234
+ *          itemName: carrots
  *     responses:
  *       200:
- *         description: Item deleted from the grocery list
+ *          description: Item deleted from the grocery list
+ *          content: 
+ *            application/json:
+ *             example: 
+ *               Success: "itemName was updated!"
  *       500:
- *         description: Error deleting the item
+ *          description: Error deleting the item
+ *          content: 
+ *            application/json:
+ *             example: 
+ *               erorr: "Error deleting item from grocery list."
  */
 router.delete('/:userLogID/:itemName', async (req, res) => {
   const userLogID = req.params.userLogID;
@@ -250,11 +305,21 @@ router.delete('/:userLogID/:itemName', async (req, res) => {
  *         name: userLogID
  *         schema:
  *           type: string
+ *         example:
+ *          userLogID: 1332
  *     responses:
  *       200:
- *         description: Grocery list deleted
+ *          description: Grocery list deleted
+ *          content: 
+ *            application/json:
+ *             example: 
+ *               Success: "Grocery list was deleted!"
  *       500:
- *         description: Error deleting the grocery list
+ *          description: Error deleting the grocery list
+ *          content: 
+ *            application/json:
+ *             example: 
+ *               erorr: "Error deleting user's grocery list."
  */
 router.delete('/:userLogID', async (req, res) => {
   const userLogID = req.params.userLogID;

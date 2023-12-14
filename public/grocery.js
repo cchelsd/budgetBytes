@@ -169,7 +169,9 @@ document.addEventListener('DOMContentLoaded', function() {
             $("#groceryListDisplay").empty();
             $("#groceryEmptyStatus").hide();
             for (let index = 0; index < groceryList.recordset.length; index++) {
-                $("#groceryListDisplay").append('<li class="list-group-item displayItem"> Item: ' + groceryList.recordset[index].itemName + '<br> <span class="displayQuantity"> Quantity: ' + groceryList.recordset[index].itemQuantity + '</span></li>');
+                if (groceryList.recordset[index].itemName != null) {
+                    $("#groceryListDisplay").append('<li class="list-group-item displayItem"> Item: ' + groceryList.recordset[index].itemName + '<br> <span class="displayQuantity"> Quantity: ' + groceryList.recordset[index].itemQuantity + '</span></li>');
+                }
             }
         } else {
             $("#groceryListDisplay").empty();
@@ -299,7 +301,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (response.ok) {
                 $("#groceryListDisplay").empty();
                 $("#optionMessageOutput").text('List deleted');
-                $('ul').empty();
+                $('#groceryListDisplay').empty();
             } else {
                 const errorResponse = await response.json();
                 $("#optionMessageOutput").text('Error deleting list - - ' + errorResponse.error);
