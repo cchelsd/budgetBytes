@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (groceryList.recordset[0] && groceryList.recordset.length > 0 ) {
             $("#groceryListDisplay").empty();
             $("#groceryEmptyStatus").hide();
-            for (let index = 1; index < groceryList.recordset.length; index++) {
+            for (let index = 0; index < groceryList.recordset.length; index++) {
                 $("#groceryListDisplay").append('<li class="list-group-item displayItem"> Item: ' + groceryList.recordset[index].itemName + '<br> <span class="displayQuantity"> Quantity: ' + groceryList.recordset[index].itemQuantity + '</span></li>');
             }
         } else {

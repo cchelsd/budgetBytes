@@ -21,7 +21,7 @@ $(document).ready(function () {
             message.css("border", "1px solid #f4f5f9");
 
             // append the conversation element to include a new list item containing the (a) message, (b) time
-            conversation.append("<li class='message-right'><div class='message-hour'>" + d + " <span class='ion-android-done-all'></span></div><div class='message-avatar'><div class='avatar ion-ios-person user'><img src='images/user.png' alt='User avatar' id='userAvatar'></div><div class='name'>You</div></div><div class='message-text'>" + text + "</div></li>");
+            conversation.append("<li class='message-right'><div class='message-hour'>" + d + " <span class='ion-android-done-all'></span></div><div class='message-avatar'><div class='avatar ion-ios-person user'><img src='images/profile-user.png' alt='User avatar' id='userAvatar'></div><div class='name'>You</div></div><div class='message-text'>" + text + "</div></li>");
 
             // clear the message textbox
             message.val('');
@@ -390,7 +390,3 @@ async function addToHistory(recipeID, userLogID, recipeName, ingredients, instru
         console.log('Error:', error);
     }
 }
-
-window.addEventListener('unload', function (event) {
-    localStorage.setItem('currentUserLogID', "");
-});

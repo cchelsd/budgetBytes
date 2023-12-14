@@ -15,8 +15,8 @@ const groceryRoutes = require("./routes/groceryRoutes");
 const assessmentRoutes = require("./routes/assessmentRoutes");
 const storeRoutes = require("./routes/groceryStoreRoutes");
 const port = 3001;
-
-var bodyParser = require('body-parser');
+const foodParserRouter = require('./routes/foodParserRoutes');
+// var bodyParser = require('body-parser');
 
 // // ----------------------------------------------
 // // (A)  Create an express application instance
@@ -79,7 +79,8 @@ app.use('/mealplan', mealPlanRoutes);
 app.use('/explore', exploreRoutes);
 app.use('/assess', assessmentRoutes);
 app.use('/stores', storeRoutes);
+app.use('/food-parser', foodParserRouter);
 
 app.listen(port, () => {
     console.log(`Express server is running and listening on port ${port}`);
-}); 
+});
